@@ -5,6 +5,7 @@ import {Input, Button} from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NetInfo from "@react-native-community/netinfo";
 import AutoHeightImage from 'react-native-auto-height-image';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import styles from './style';
@@ -16,6 +17,7 @@ class LoginScreen extends Component {
         this.state = {
             usernameInput: '',
             passwordInput: '',
+            isDeviceOnline: false,
         }
 
 
@@ -24,8 +26,10 @@ class LoginScreen extends Component {
         this.handleLoginResponse = this.handleLoginResponse.bind(this);
         this.storeApiKeys = this.storeApiKeys.bind(this);
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
+        this.checkInternetConnection = this.checkInternetConnection.bind(this);
 
         this.initSession();
+        this.checkInternetConnection();
     }
 
     initSession = async() => {
@@ -38,6 +42,33 @@ class LoginScreen extends Component {
         }
     }
 
+    checkInternetConnection = () =>{
+        // check if device is online
+        NetInfo.getConnectionInfo().then(data => {
+            if (data.type == 'wifi' || data.type=='cellular'){
+                this.setState({isDeviceOnline:true});
+            } else {
+                this.setState({isDeviceOnline:false});
+            }
+            console.log("Connection type", data.type);
+            console.log("Connection effective type", data.effectiveType);
+        });
+
+        // add event listener to check internet connection
+        const listener = data => {
+            if (data.type == 'wifi' || data.type=='cellular'){
+                this.setState({isDeviceOnline:true});
+            } else {
+                this.setState({isDeviceOnline:false});
+            }
+            console.log("Connection type", data.type);
+            console.log("Connection effective type", data.effectiveType);
+        };
+        
+        // Subscribe
+        const subscription = NetInfo.addEventListener('connectionChange', listener);
+    }
+
     navigateToDashboard() {
         this.props.navigation.navigate('Dashboard');
     }
@@ -47,6 +78,8 @@ class LoginScreen extends Component {
         let password = this.state.passwordInput;
         if (username == null || password == null){
             Alert.alert('Incorrect username or password');
+        } else if (this.state.isDeviceOnline == false){
+            Alert.alert('No internet connection');
         } else {
             var formData = new FormData();
             formData.append('username',username);
@@ -158,7 +191,7 @@ class LoginScreen extends Component {
                                             inputContainerStyle={{ borderBottomWidth:0 }} 
                                             inputStyle={styles.inputField}
                                             ref={(input) => { this.passwordInput = input; }}
-                                            returnKeyType = { "next" }
+                                            returnKeyType = { "done" }
                                             blurOnSubmit={false}
                                             onChangeText={passwordInput => this.setState({passwordInput})}
                                             autoCapitalize={'none'}
