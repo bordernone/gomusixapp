@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {Text, View, Image, StatusBar, Alert, FlatList} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import {ListItem, Divider} from 'react-native-elements';
+import {ListItem, Divider, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
-//import LinearGradient from 'react-native-linear-gradient';
 import NetInfo from '@react-native-community/netinfo';
+import TrackPlayer from 'react-native-track-player';
+import RNFS from 'react-native-fs';
 import '../../global/config';
 
 class OnlineScreen extends Component {
@@ -24,6 +25,7 @@ class OnlineScreen extends Component {
                     artist: 'No internet connection'
                 } ]
         }
+        
 
         this.isDeviceOnline = false;
         this.navigateToMusics = this.navigateToMusics.bind(this);
@@ -31,12 +33,24 @@ class OnlineScreen extends Component {
         this.getApiCredentials = this.getApiCredentials.bind(this);
         this.getMusicFiles = this.getMusicFiles.bind(this);
         this.refreshToken = this.refreshToken.bind(this);
+        this.handleSongTap = this.handleSongTap.bind(this);
+        this.downloadThisSong = this.downloadThisSong.bind(this);
+        this.getUsername = this.getUsername.bind(this);
+        this.getApiToken = this.getApiToken.bind(this);
+        this.getApiRefreshToken = this.getApiRefreshToken.bind(this);
+        this.playThisSongOffline = this.playThisSongOffline.bind(this);
 
         this.checkInternetConnection();
         this.getApiCredentials();
         this.getMusicFiles();
+
+        // initializing TrackPlayer
+        TrackPlayer.setupPlayer();
+        
+        this.playThisSongOffline();
     }
 
+    // login credential functions
     getApiCredentials = async() => {
         if (this._isMounted){
             try {
@@ -100,10 +114,51 @@ class OnlineScreen extends Component {
         }
     }
 
+    getUsername = async() => {
+        if (this.state.tokenObtained == true){
+            return this.state.username;
+        } else {
+            await this.getApiCredentials();
+            if (this.state.tokenObtained == false){
+                console.warn('Could not get api credentails');
+            } else {
+                return this.state.username;
+            }
+        }
+    }
+
+    getApiToken = async() => {
+        if (this.state.tokenObtained == true){
+            return this.state.apiToken;
+        } else {
+            await this.getApiCredentials();
+            if (this.state.tokenObtained == false){
+                console.warn('Could not get api credentails');
+            } else {
+                return this.state.apiToken;
+            }
+        }
+    }
+
+    getApiRefreshToken = async() => {
+        if (this.state.tokenObtained == true){
+            return this.state.apiRefreshToken;
+        } else {
+            await this.getApiCredentials();
+            if (this.state.tokenObtained == false){
+                console.warn('Could not get api credentails');
+            } else {
+                return this.state.apiRefreshToken;
+            }
+        }
+    }
+
+    // navigation functions
     navigateToMusics(){
         this.props.navigation.navigate('Musics');
     }
 
+    // MISC functions
     _isMounted = false;   
 
     componentDidMount(){
@@ -111,12 +166,23 @@ class OnlineScreen extends Component {
         this.getMusicFiles();
         this.checkInternetConnection();
         this.getApiCredentials();
+
+        // Adds an event handler for the playback-track-changed event
+        this.onTrackChange = TrackPlayer.addEventListener('playback-track-changed', async (data) => {
+            
+            const track = await TrackPlayer.getTrack(data.nextTrack);
+            this.setState({trackTitle: track.title});
+            
+        });
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+        // Removes the event handler
+        this.onTrackChange.remove();
     }
 
+    // Player specific funtions
     getMusicFiles = async () => {
         this.checkInternetConnection();
 
@@ -127,8 +193,10 @@ class OnlineScreen extends Component {
         if (this.isDeviceOnline == true && this.state.tokenObtained == true){
             // sending request
             var formData = new FormData();
-            formData.append('username', this.state.username);
-            formData.append('token', this.state.apiToken);
+            let username = await this.getUsername();
+            let apiToken = await this.getApiToken();
+            formData.append('username', username);
+            formData.append('token', apiToken);
             var data = {
                 method: 'POST',
                 headers: {
@@ -158,6 +226,36 @@ class OnlineScreen extends Component {
                     console.warn(error);
                 });            
         }
+    }
+
+    downloadThisSong = async (sn) => {
+        if (this.state.tokenObtained == true){
+            let username = await this.getUsername();
+            let apiToken = await this.getApiToken();
+            RNFS.downloadFile({
+                fromUrl: global.DOMAIN+'api/songs/play/?sn='+sn+'&username='+username+'&token='+apiToken,
+                toFile: `${RNFS.DocumentDirectoryPath}/mysong.mp3`,
+            }).promise.then((r) => {
+                // Download complete
+                console.warn(r);
+            });
+        }
+    }
+
+    playThisSongOffline = async (sn) => {
+        // Adds a track to the queue
+        await TrackPlayer.add({
+            id: 'trackId',
+            url: `file://${RNFS.DocumentDirectoryPath}/mysong.mp3`,
+            title: 'Track Title',
+            artist: 'Track Artist',
+        });
+    
+        // Starts playing it
+        TrackPlayer.play();
+        TrackPlayer.setVolume(1);
+        let state = await TrackPlayer.getState();
+        console.warn(`file://${RNFS.DocumentDirectoryPath}/mysong.mp3`);
     }
 
     logoutUser = () => {
@@ -197,6 +295,10 @@ class OnlineScreen extends Component {
 
     keyExtractor = (item, index) => index.toString()
 
+    handleSongTap = (item) =>{
+        
+    }
+
     renderItem = ({ item }) => (
         <ListItem
             title={item.title}
@@ -206,12 +308,18 @@ class OnlineScreen extends Component {
             subtitleProps={{numberOfLines:1}}
             subtitleStyle={{color:'white'}}
             leftAvatar={{ source: { uri: (global.DOMAIN+'api/songs/thumbnail/?sn='+item.sn+'&token='+this.state.apiToken+'&username='+this.state.username) } }}
-            onPress={() => {Alert.alert(item.sn.toString())}}
+            onPress= {() => this.handleSongTap(item)}
             containerStyle={{backgroundColor:'#061737'}}
             Component={TouchableScale}
             friction={90} 
             tension={100} // These props are passed to the parent component (here TouchableScale)
-            activeScale={0.95} 
+            activeScale={0.95}
+            rightElement={<Icon
+                raised
+                name='download'
+                type='font-awesome'
+                color='#f50'
+                onPress={() => this.downloadThisSong(item.sn) } />}
         />
     )
 

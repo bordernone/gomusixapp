@@ -36,19 +36,26 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* GoMusixTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GoMusixTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		3359F1E12264EE19008D262E /* sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3359F1E02264EE19008D262E /* sound.mp3 */; };
+		33A8D766226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
+		33A8D767226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
+		33A8D768226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
+		33A8D79D22659B8500B58EF5 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A8D79C22659B8500B58EF5 /* dummy.swift */; };
 		36913B0451F84F669295DF58 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 239E9AD1BA3E4B30A2139124 /* libRNCNetInfo-tvOS.a */; };
 		40B5C8E17F09495E866FC55F /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C31362A42D3409486E76282 /* Feather.ttf */; };
+		44B4EADD8B92478DA25786EA /* libRNTrackPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25953177BF4946E59E8EBDA7 /* libRNTrackPlayer.a */; };
+		4A236F9636184E4EA6E13ABD /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
 		5516D8790C11470AAB052E3C /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD49589B9DF04C8F8AC98490 /* libRNCAsyncStorage.a */; };
 		5A61FC53221B405E96BC5DED /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2386182921824BB8B30EF1B6 /* Zocial.ttf */; };
 		5D68AEBF49E64090BACBE4B5 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75D8010C25A84296BC830E50 /* Foundation.ttf */; };
 		68D7861F3D7E4C789A069416 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B30EB60A0484E75949D8FD1 /* SimpleLineIcons.ttf */; };
+		721C3D7283F3440E8D59C466 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84760EFE388C4B15B94B9F62 /* libRNFS.a */; };
 		764354AC853E4CF2A2E02DB8 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 372DCF93EA3E4B8586BA18E3 /* FontAwesome5_Brands.ttf */; };
 		80CA9A76FBA94587AC566E5F /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2D21D0A9BE642FEA77A1F47 /* libRNCNetInfo.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8B86D81E113B4B538444062A /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B621CD7795646E9AE572BFA /* libRNVectorIcons.a */; };
 		97408E8461134B76A479657C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B07F81061A234E648C6C268C /* FontAwesome.ttf */; };
 		9792B292725740F2AAEDB6DB /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA25BBBCA5D545509E2D62B4 /* Octicons.ttf */; };
-		9FA5A699DE68422E8476894B /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 941EFE19C8894315A4801CB8 /* libBVLinearGradient.a */; };
 		9FAD9FCF04DF45A6AA846BC7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B8EBABA2D774A7187E5B9D5 /* EvilIcons.ttf */; };
 		A33823FE1E7D4B8E9F22586E /* SegoeScript.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A4EE616E0E348C29F7B1786 /* SegoeScript.ttf */; };
 		A552D258ABC54B4BB83514FF /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A257262D4FA484A8FE124DD /* Entypo.ttf */; };
@@ -198,6 +205,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
 			remoteInfo = "double-conversion-tvOS";
+		};
+		3369F8612266D5B700BB94FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60D733AAE13E4F8FA24A52DC /* RNTrackPlayer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9B0E28291F07D76F00B71D2A;
+			remoteInfo = RNTrackPlayer;
+		};
+		33A8D70A2265929B00B58EF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3192A30185974542A380F406 /* RNFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
+			remoteInfo = RNFS;
+		};
+		33A8D70C2265929B00B58EF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3192A30185974542A380F406 /* RNFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6456441F1EB8DA9100672408;
+			remoteInfo = "RNFS-tvOS";
 		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -416,25 +444,30 @@
 		1A257262D4FA484A8FE124DD /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		2386182921824BB8B30EF1B6 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		239E9AD1BA3E4B30A2139124 /* libRNCNetInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNCNetInfo-tvOS.a"; sourceTree = "<group>"; };
+		25953177BF4946E59E8EBDA7 /* libRNTrackPlayer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNTrackPlayer.a; sourceTree = "<group>"; };
 		2C31362A42D3409486E76282 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* GoMusix-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GoMusix-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* GoMusix-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoMusix-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3192A30185974542A380F406 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		3359F1E02264EE19008D262E /* sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sound.mp3; path = ../../../../Downloads/sound.mp3; sourceTree = "<group>"; };
+		33A8D79C22659B8500B58EF5 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		34A6D9BAEBBF4CCC99F6A0B8 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		372DCF93EA3E4B8586BA18E3 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; path = RNPlaceholder.swift; sourceTree = "<group>"; };
 		3B8EBABA2D774A7187E5B9D5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		3E9440CDB682463291CD6896 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		3F4C121C18804D02B9A25CF3 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCAsyncStorage.xcodeproj; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; };
 		4A4EE616E0E348C29F7B1786 /* SegoeScript.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SegoeScript.ttf; path = ../components/global/fonts/SegoeScript.ttf; sourceTree = "<group>"; };
 		5B30EB60A0484E75949D8FD1 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		60D733AAE13E4F8FA24A52DC /* RNTrackPlayer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNTrackPlayer.xcodeproj; path = "../node_modules/react-native-track-player/ios/RNTrackPlayer.xcodeproj"; sourceTree = "<group>"; };
 		72DBF6974AE045759BFEEE01 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		75D8010C25A84296BC830E50 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		84760EFE388C4B15B94B9F62 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		8D52D7A9412449F7AC9D4D53 /* RNCNetInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCNetInfo.xcodeproj; path = "../node_modules/@react-native-community/netinfo/ios/RNCNetInfo.xcodeproj"; sourceTree = "<group>"; };
 		8E25A30ABCF045F38A7117F9 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
-		941EFE19C8894315A4801CB8 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		9C1428D22F9246AAA1D1F210 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		AC138AE20E9C4A8E899100CC /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -480,7 +513,8 @@
 				8B86D81E113B4B538444062A /* libRNVectorIcons.a in Frameworks */,
 				5516D8790C11470AAB052E3C /* libRNCAsyncStorage.a in Frameworks */,
 				80CA9A76FBA94587AC566E5F /* libRNCNetInfo.a in Frameworks */,
-				9FA5A699DE68422E8476894B /* libBVLinearGradient.a in Frameworks */,
+				721C3D7283F3440E8D59C466 /* libRNFS.a in Frameworks */,
+				44B4EADD8B92478DA25786EA /* libRNTrackPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,6 +674,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3369F85E2266D5B700BB94FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3369F8622266D5B700BB94FD /* libRNTrackPlayer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		33A8D7062265929B00B58EF5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				33A8D70B2265929B00B58EF5 /* libRNFS.a */,
+				33A8D70D2265929B00B58EF5 /* libRNFS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -700,7 +751,8 @@
 				8E25A30ABCF045F38A7117F9 /* RNVectorIcons.xcodeproj */,
 				3F4C121C18804D02B9A25CF3 /* RNCAsyncStorage.xcodeproj */,
 				8D52D7A9412449F7AC9D4D53 /* RNCNetInfo.xcodeproj */,
-				3E9440CDB682463291CD6896 /* BVLinearGradient.xcodeproj */,
+				3192A30185974542A380F406 /* RNFS.xcodeproj */,
+				60D733AAE13E4F8FA24A52DC /* RNTrackPlayer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -717,6 +769,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				33A8D79C22659B8500B58EF5 /* dummy.swift */,
+				3359F1E02264EE19008D262E /* sound.mp3 */,
 				13B07FAE1A68108700A75B9A /* GoMusix */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* GoMusixTests */,
@@ -777,7 +831,9 @@
 				DD49589B9DF04C8F8AC98490 /* libRNCAsyncStorage.a */,
 				B2D21D0A9BE642FEA77A1F47 /* libRNCNetInfo.a */,
 				239E9AD1BA3E4B30A2139124 /* libRNCNetInfo-tvOS.a */,
-				941EFE19C8894315A4801CB8 /* libBVLinearGradient.a */,
+				84760EFE388C4B15B94B9F62 /* libRNFS.a */,
+				395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */,
+				25953177BF4946E59E8EBDA7 /* libRNTrackPlayer.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -972,8 +1028,16 @@
 					ProjectRef = 8D52D7A9412449F7AC9D4D53 /* RNCNetInfo.xcodeproj */;
 				},
 				{
+					ProductGroup = 33A8D7062265929B00B58EF5 /* Products */;
+					ProjectRef = 3192A30185974542A380F406 /* RNFS.xcodeproj */;
+				},
+				{
 					ProductGroup = FAF4CB0C225B99EF00268F31 /* Products */;
 					ProjectRef = D703E000F8F14BE5A86354ED /* RNGestureHandler.xcodeproj */;
+				},
+				{
+					ProductGroup = 3369F85E2266D5B700BB94FD /* Products */;
+					ProjectRef = 60D733AAE13E4F8FA24A52DC /* RNTrackPlayer.xcodeproj */;
 				},
 				{
 					ProductGroup = FAF4CB48225B9FDD00268F31 /* Products */;
@@ -1108,6 +1172,27 @@
 			fileType = archive.ar;
 			path = "libdouble-conversion.a";
 			remoteRef = 2DF0FFE82056DD460020B375 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3369F8622266D5B700BB94FD /* libRNTrackPlayer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTrackPlayer.a;
+			remoteRef = 3369F8612266D5B700BB94FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		33A8D70B2265929B00B58EF5 /* libRNFS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFS.a;
+			remoteRef = 33A8D70A2265929B00B58EF5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		33A8D70D2265929B00B58EF5 /* libRNFS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFS.a;
+			remoteRef = 33A8D70C2265929B00B58EF5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {
@@ -1319,6 +1404,7 @@
 				A552D258ABC54B4BB83514FF /* Entypo.ttf in Resources */,
 				9FAD9FCF04DF45A6AA846BC7 /* EvilIcons.ttf in Resources */,
 				40B5C8E17F09495E866FC55F /* Feather.ttf in Resources */,
+				3359F1E12264EE19008D262E /* sound.mp3 in Resources */,
 				97408E8461134B76A479657C /* FontAwesome.ttf in Resources */,
 				764354AC853E4CF2A2E02DB8 /* FontAwesome5_Brands.ttf in Resources */,
 				D6D5886A26C7429683897912 /* FontAwesome5_Regular.ttf in Resources */,
@@ -1388,6 +1474,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* GoMusixTests.m in Sources */,
+				33A8D766226599E800B58EF5 /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1397,6 +1484,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				33A8D79D22659B8500B58EF5 /* dummy.swift in Sources */,
+				4A236F9636184E4EA6E13ABD /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,6 +1495,7 @@
 			files = (
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
+				33A8D767226599E800B58EF5 /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,6 +1504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DCD954D1E0B4F2C00145EB5 /* GoMusixTests.m in Sources */,
+				33A8D768226599E800B58EF5 /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1462,20 +1553,14 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = GoMusixTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1484,6 +1569,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoMusix.app/GoMusix";
 			};
 			name = Debug;
@@ -1502,20 +1588,14 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = GoMusixTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1524,6 +1604,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoMusix.app/GoMusix";
 			};
 			name = Release;
@@ -1543,6 +1624,8 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = GoMusix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1553,6 +1636,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = GoMusix;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1572,6 +1656,8 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = GoMusix/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1582,6 +1668,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = GoMusix;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1607,19 +1694,13 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = "GoMusix-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1629,6 +1710,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.GoMusix-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
@@ -1654,19 +1736,13 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = "GoMusix-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1676,6 +1752,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.GoMusix-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
@@ -1700,19 +1777,13 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = "GoMusix-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1722,6 +1793,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.GoMusix-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoMusix-tvOS.app/GoMusix-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
@@ -1746,19 +1818,13 @@
 					"$(SRCROOT)/../node_modules/react-native-get-music-files/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-track-player/ios/RNTrackPlayer/**",
 				);
 				INFOPLIST_FILE = "GoMusix-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1768,6 +1834,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.GoMusix-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoMusix-tvOS.app/GoMusix-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
@@ -1823,6 +1890,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1868,6 +1936,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

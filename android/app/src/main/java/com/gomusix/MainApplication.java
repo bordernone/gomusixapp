@@ -3,7 +3,8 @@ package com.gomusix;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.BV.LinearGradient.LinearGradientPackage;
+import com.guichaguri.trackplayer.TrackPlayer;
+import com.rnfs.RNFSPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,10 +28,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new LinearGradientPackage(),
+            new MainReactPackage(),
+            new TrackPlayer(),
+            new RNFSPackage(),
             new NetInfoPackage(),
-            //new RNReactNativeGetMusicFilesPackage(),
             new AsyncStoragePackage(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage()

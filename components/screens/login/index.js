@@ -74,6 +74,7 @@ class LoginScreen extends Component {
     }
 
     signInNow(){
+        console.warn(this.state.isDeviceOnline);
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
         if (username == null || password == null){
@@ -100,6 +101,7 @@ class LoginScreen extends Component {
         }
     }
     handleLoginResponse = async (responseObj) => {
+        console.warn('right');
         if (responseObj.hasOwnProperty('apiToken') && responseObj.hasOwnProperty('apiRefreshToken')){
             let apiToken = responseObj.apiToken;
             let apiRefreshToken = responseObj.apiRefreshToken;

@@ -138,7 +138,9 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-track-player')
+    implementation project(':react-native-fs')
+    //implementation project(':react-native-linear-gradient')
     implementation project(':@react-native-community_netinfo')
     //implementation project(':react-native-get-music-files')
     implementation project(':@react-native-community_async-storage')
