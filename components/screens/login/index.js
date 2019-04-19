@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Text, View, Image, StatusBar, Alert, Dimensions, Platform} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, Image, StatusBar, Alert, Dimensions, Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Input, Button} from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetInfo from "@react-native-community/netinfo";
 import AutoHeightImage from 'react-native-auto-height-image';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import styles from './style';
 import '../../global/config';
 
@@ -32,23 +32,23 @@ class LoginScreen extends Component {
         this.checkInternetConnection();
     }
 
-    initSession = async() => {
+    initSession = async () => {
         let isLoggedIn = await this.isUserLoggedIn();
-        if (isLoggedIn == true){
-            this.setState({isUserLoggedIn:true});
+        if (isLoggedIn == true) {
+            this.setState({ isUserLoggedIn: true });
             this.navigateToDashboard();
         } else {
-            this.setState({isUserLoggedIn:false});
+            this.setState({ isUserLoggedIn: false });
         }
     }
 
-    checkInternetConnection = () =>{
+    checkInternetConnection = () => {
         // check if device is online
         NetInfo.getConnectionInfo().then(data => {
-            if (data.type == 'wifi' || data.type=='cellular'){
-                this.setState({isDeviceOnline:true});
+            if (data.type == 'wifi' || data.type == 'cellular') {
+                this.setState({ isDeviceOnline: true });
             } else {
-                this.setState({isDeviceOnline:false});
+                this.setState({ isDeviceOnline: false });
             }
             console.log("Connection type", data.type);
             console.log("Connection effective type", data.effectiveType);
@@ -56,15 +56,15 @@ class LoginScreen extends Component {
 
         // add event listener to check internet connection
         const listener = data => {
-            if (data.type == 'wifi' || data.type=='cellular'){
-                this.setState({isDeviceOnline:true});
+            if (data.type == 'wifi' || data.type == 'cellular') {
+                this.setState({ isDeviceOnline: true });
             } else {
-                this.setState({isDeviceOnline:false});
+                this.setState({ isDeviceOnline: false });
             }
             console.log("Connection type", data.type);
             console.log("Connection effective type", data.effectiveType);
         };
-        
+
         // Subscribe
         const subscription = NetInfo.addEventListener('connectionChange', listener);
     }
@@ -73,18 +73,18 @@ class LoginScreen extends Component {
         this.props.navigation.navigate('Dashboard');
     }
 
-    signInNow(){
+    signInNow() {
         console.warn(this.state.isDeviceOnline);
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
-        if (username == null || password == null){
+        if (username == null || password == null) {
             Alert.alert('Incorrect username or password');
-        } else if (this.state.isDeviceOnline == false){
+        } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
             var formData = new FormData();
-            formData.append('username',username);
-            formData.append('password',password);
+            formData.append('username', username);
+            formData.append('password', password);
             var data = {
                 method: 'POST',
                 headers: {
@@ -92,9 +92,9 @@ class LoginScreen extends Component {
                 },
                 body: formData,
             };
-            fetch(global.DOMAIN  + 'api/token/', data)
+            fetch(global.DOMAIN + 'api/token/', data)
                 .then((res) => res.json())
-                .then((res) => {this.handleLoginResponse(res)})
+                .then((res) => { this.handleLoginResponse(res) })
                 .catch((error) => {
                     console.warn(error);
                 });
@@ -102,11 +102,11 @@ class LoginScreen extends Component {
     }
     handleLoginResponse = async (responseObj) => {
         console.warn('right');
-        if (responseObj.hasOwnProperty('apiToken') && responseObj.hasOwnProperty('apiRefreshToken')){
+        if (responseObj.hasOwnProperty('apiToken') && responseObj.hasOwnProperty('apiRefreshToken')) {
             let apiToken = responseObj.apiToken;
             let apiRefreshToken = responseObj.apiRefreshToken;
             let storeKeys = await this.storeApiKeys(apiToken, apiRefreshToken, this.state.usernameInput);
-            if (storeKeys === true){
+            if (storeKeys === true) {
                 this.navigateToDashboard();
             } else {
                 Alert.alert('Something went wrong.');
@@ -121,7 +121,7 @@ class LoginScreen extends Component {
             await AsyncStorage.setItem('@GoMusix:apiToken', (apiToken));
             await AsyncStorage.setItem('@GoMusix:apiRefreshToken', (apiRefreshToken));
             await AsyncStorage.setItem('@GoMusix:username', (username));
-            this.setState({isUserLoggedIn:true});
+            this.setState({ isUserLoggedIn: true });
             successful = true;
         } catch (error) {
             console.warn(error);
@@ -129,18 +129,18 @@ class LoginScreen extends Component {
         }
         return successful;
     }
-    isUserLoggedIn = async () =>{
+    isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
-            let apiToken  = await AsyncStorage.getItem('@GoMusix:apiToken');
+            let apiToken = await AsyncStorage.getItem('@GoMusix:apiToken');
             let apiRefreshToken = await AsyncStorage.getItem('@GoMusix:apiRefreshToken');
             let username = await AsyncStorage.getItem('@GoMusix:username');
-            if (apiToken == null || apiRefreshToken == null || username == null){
+            if (apiToken == null || apiRefreshToken == null || username == null) {
                 loggedIn = false;
             } else {
                 loggedIn = true;
             }
-        } catch(error){
+        } catch (error) {
             console.warn(error);
             loggedIn = false;
         }
@@ -150,10 +150,10 @@ class LoginScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusBar barStyle={ Platform.OS === 'ios' ? "light-content" : 'dark-content'} backgroundColor="transparent"/>
+                <StatusBar barStyle={Platform.OS === 'ios' ? "light-content" : 'dark-content'} backgroundColor="transparent" />
 
                 <SafeAreaView>
-                    <ScrollView 
+                    <ScrollView
                         styles={styles.contentsWrapper}
                         showsVerticalScrollIndicator={false}>
                         <View style={styles.bodyContainer}>
@@ -171,35 +171,35 @@ class LoginScreen extends Component {
                                 </View>
 
                                 <View style={styles.formInputContainer}>
-                                        <Input 
-                                            placeholder={'Your username here'} 
-                                            placeholderTextColor={'white'} 
-                                            inputContainerStyle={{ borderBottomWidth:0 }} 
-                                            inputStyle={styles.inputField}
-                                            ref={(input) => { this.usernameInput = input; }}
-                                            returnKeyType = { "next" }
-                                            onSubmitEditing={() => { this.passwordInput.focus(); }}
-                                            blurOnSubmit={false}
-                                            onChangeText={usernameInput => this.setState({usernameInput})}
-                                            autoCapitalize={'none'}
-                                            autoCorrect={false}
-                                        />
+                                    <Input
+                                        placeholder={'Your username here'}
+                                        placeholderTextColor={'white'}
+                                        inputContainerStyle={{ borderBottomWidth: 0 }}
+                                        inputStyle={styles.inputField}
+                                        ref={(input) => { this.usernameInput = input; }}
+                                        returnKeyType={"next"}
+                                        onSubmitEditing={() => { this.passwordInput.focus(); }}
+                                        blurOnSubmit={false}
+                                        onChangeText={usernameInput => this.setState({ usernameInput })}
+                                        autoCapitalize={'none'}
+                                        autoCorrect={false}
+                                    />
                                 </View>
 
                                 <View style={styles.formInputContainer}>
-                                        <Input 
-                                            placeholder={'Your password here'} 
-                                            placeholderTextColor={'white'} 
-                                            inputContainerStyle={{ borderBottomWidth:0 }} 
-                                            inputStyle={styles.inputField}
-                                            ref={(input) => { this.passwordInput = input; }}
-                                            returnKeyType = { "done" }
-                                            blurOnSubmit={false}
-                                            onChangeText={passwordInput => this.setState({passwordInput})}
-                                            autoCapitalize={'none'}
-                                            autoCorrect={false}
-                                            secureTextEntry={true}
-                                        />
+                                    <Input
+                                        placeholder={'Your password here'}
+                                        placeholderTextColor={'white'}
+                                        inputContainerStyle={{ borderBottomWidth: 0 }}
+                                        inputStyle={styles.inputField}
+                                        ref={(input) => { this.passwordInput = input; }}
+                                        returnKeyType={"done"}
+                                        blurOnSubmit={false}
+                                        onChangeText={passwordInput => this.setState({ passwordInput })}
+                                        autoCapitalize={'none'}
+                                        autoCorrect={false}
+                                        secureTextEntry={true}
+                                    />
                                 </View>
 
                                 <View style={styles.forgotPasswordContainer}>
@@ -218,7 +218,7 @@ class LoginScreen extends Component {
                                                 style={styles.loginTitle}
                                                 name="sign-in"
                                                 color="white"
-                                                />
+                                            />
                                         }
                                         title={" Sign In"}
                                     />
@@ -229,12 +229,12 @@ class LoginScreen extends Component {
                                         <Text style={styles.skipButtonText}>Skip >>></Text>
                                     </TouchableOpacity>
                                 </View>
-                                
+
                             </View>
                         </View>
                     </ScrollView>
                 </SafeAreaView>
-                
+
             </View>
         );
     }

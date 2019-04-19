@@ -63,10 +63,10 @@ const dashboardStackWrapper = createStackNavigator({
             return {
                 title: routeName,
                 headerStyle:{
-                    backgroundColor:'#061737',
+                    //backgroundColor:'#061737',
                 },
                 headerTitleStyle:{
-                    color:'white',
+                    color:'#061737',
                 },
             }
         },
