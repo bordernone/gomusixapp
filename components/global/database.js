@@ -1,6 +1,12 @@
+import { Platform } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
+import { thumbnailExist, getLocalThumbnailUrl } from './utils';
 
-var db = openDatabase({ name: 'gomusix.sqlite', createFromLocation: "~www/gomusix.sqlite" }, function () { }, function (err) { console.log(err) });
+if (Platform.OS == 'ios') {
+    var db = openDatabase({ name: 'gomusix.sqlite', createFromLocation: "~www/gomusix.sqlite" }, function () { console.log('database opened') }, function (err) { console.log(err) });
+} else {
+    var db = openDatabase({ name: 'gomusix.sqlite', createFromLocation: 1 });
+}
 
 class UserSongs {
     constructor() {
@@ -62,6 +68,42 @@ class UserSongs {
                     } else {
                         console.log('Failed to update entry');
                         console.log(res);
+                        console.log(tx);
+                    }
+                }
+            );
+        });
+    }
+
+
+    getSongsList = async (_this) => {
+        db.transaction(async function (txn) {
+            txn.executeSql(
+                'SELECT * FROM songsdetail', [],
+                async function (tx, response) {
+                    let rows = response.rows.length;
+                    if (rows > 0) {
+                        var i = 0;
+                        var thisRow;
+                        var musicsList = [];
+                        var thumbnail = '';
+                        for (i = 0; i < rows; i++) {
+                            thisRow = response.rows.item(i);
+                            thumbnail = await getLocalThumbnailUrl(thisRow.SN);
+                            musicsList.push({
+                                sn: thisRow.SN,
+                                title: thisRow.Name,
+                                artist: thisRow.Artist,
+                                thumbnailUrl: thumbnail,
+                            });
+                        }
+                        _this.setState({
+                            musicsList: musicsList,
+                        });
+                        console.log(musicsList);
+                    } else {
+                        console.log('Cannot get songs list');
+                        console.log(response);
                         console.log(tx);
                     }
                 }

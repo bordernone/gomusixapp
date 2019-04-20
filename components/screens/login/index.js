@@ -32,13 +32,27 @@ class LoginScreen extends Component {
         this.checkInternetConnection();
     }
 
+    // MISC functions
+    _isMounted = false;
+
+    componentDidMount() {
+        this._isMounted = true;
+        this.initSession();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     initSession = async () => {
         let isLoggedIn = await this.isUserLoggedIn();
-        if (isLoggedIn == true) {
-            this.setState({ isUserLoggedIn: true });
-            this.navigateToDashboard();
-        } else {
-            this.setState({ isUserLoggedIn: false });
+        if (this._isMounted) {
+            if (isLoggedIn == true) {
+                this.setState({ isUserLoggedIn: true });
+                this.navigateToDashboard();
+            } else {
+                this.setState({ isUserLoggedIn: false });
+            }
         }
     }
 
