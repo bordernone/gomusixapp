@@ -39,11 +39,9 @@
 		2DCD954D1E0B4F2C00145EB5 /* GoMusixTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GoMusixTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		33439E612268DB4900E05C30 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 33439E602268DB4900E05C30 /* www */; };
-		3359F1E12264EE19008D262E /* sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3359F1E02264EE19008D262E /* sound.mp3 */; };
 		33A8D766226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
 		33A8D767226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
 		33A8D768226599E800B58EF5 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */; };
-		33A8D79D22659B8500B58EF5 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A8D79C22659B8500B58EF5 /* dummy.swift */; };
 		36913B0451F84F669295DF58 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 239E9AD1BA3E4B30A2139124 /* libRNCNetInfo-tvOS.a */; };
 		40B5C8E17F09495E866FC55F /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C31362A42D3409486E76282 /* Feather.ttf */; };
 		44B4EADD8B92478DA25786EA /* libRNTrackPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25953177BF4946E59E8EBDA7 /* libRNTrackPlayer.a */; };
@@ -462,8 +460,6 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3192A30185974542A380F406 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		33439E602268DB4900E05C30 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../www; sourceTree = "<group>"; };
-		3359F1E02264EE19008D262E /* sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sound.mp3; path = ../../../../Downloads/sound.mp3; sourceTree = "<group>"; };
-		33A8D79C22659B8500B58EF5 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		34A6D9BAEBBF4CCC99F6A0B8 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		372DCF93EA3E4B8586BA18E3 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		395ADAD8716F43D89F9CE1AD /* RNPlaceholder.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; path = RNPlaceholder.swift; sourceTree = "<group>"; };
@@ -793,8 +789,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				33A8D79C22659B8500B58EF5 /* dummy.swift */,
-				3359F1E02264EE19008D262E /* sound.mp3 */,
 				13B07FAE1A68108700A75B9A /* GoMusix */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* GoMusixTests */,
@@ -1445,7 +1439,6 @@
 				A552D258ABC54B4BB83514FF /* Entypo.ttf in Resources */,
 				9FAD9FCF04DF45A6AA846BC7 /* EvilIcons.ttf in Resources */,
 				40B5C8E17F09495E866FC55F /* Feather.ttf in Resources */,
-				3359F1E12264EE19008D262E /* sound.mp3 in Resources */,
 				97408E8461134B76A479657C /* FontAwesome.ttf in Resources */,
 				33439E612268DB4900E05C30 /* www in Resources */,
 				764354AC853E4CF2A2E02DB8 /* FontAwesome5_Brands.ttf in Resources */,
@@ -1526,7 +1519,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				33A8D79D22659B8500B58EF5 /* dummy.swift in Sources */,
 				4A236F9636184E4EA6E13ABD /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

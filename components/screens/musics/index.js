@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import { Text, View, Image, StatusBar, Alert, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { ListItem, Divider } from 'react-native-elements';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ListItem, Divider , SearchBar} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import RNFS from 'react-native-fs';
+import Swipeout from 'react-native-swipeout';
 import UserSongs from '../../global/database';
 import styles from './style';
-import { playThisSongOffline } from '../../global/utils';
+import { playThisSongOffline, deleteThisSong } from '../../global/utils';
 
 class MusicsScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            searchInput: null,
+            originalMusicsList:[],
             musicsList: [],
+            rowIndex: null,
         }
 
         this.navigateToOnline = this.navigateToOnline.bind(this);
@@ -20,12 +24,15 @@ class MusicsScreen extends Component {
         this.getSongsList = this.getSongsList.bind(this);
         this.initiate = this.initiate.bind(this);
         this.getLocalThumbnailUrl = this.getLocalThumbnailUrl.bind(this);
+        this.onSwipeClose = this.onSwipeClose.bind(this);
+        this.onSwipeOpen = this.onSwipeOpen.bind(this);
+        this.handleSongDelete = this.handleSongDelete.bind(this);
+        this.updateSearch = this.updateSearch.bind(this);
 
         // creating database object
         this.userSongsObj = new UserSongs();
 
         this.initiate();
-
 
     }
 
@@ -42,8 +49,7 @@ class MusicsScreen extends Component {
 
     // other functions
     getSongsList = async () => {
-        let songsList = await this.userSongsObj.getSongsList(this);
-        console.log(songsList);
+        await this.userSongsObj.getSongsList(this);
     }
 
     getLocalThumbnailUrl = (sn) => {
@@ -53,39 +59,99 @@ class MusicsScreen extends Component {
 
     // user interaction functions
     handleSongTap = (item) => {
-        playThisSongOffline(item.sn);
+        playThisSongOffline(item.sn, item.title, item.artist);
     }
 
-    renderItem = ({ item }) => (
-        <ListItem
-            title={item.title}
-            titleProps={{ numberOfLines: 1 }}
-            titleStyle={styles.songTitleStyle}
-            subtitle={item.artist}
-            subtitleProps={{ numberOfLines: 1 }}
-            subtitleStyle={styles.songArtistStyle}
-            leftAvatar={{ source: { uri: item.thumbnailUrl } }}
-            onPress={() => this.handleSongTap(item)}
-            containerStyle={styles.songListContainer}
-            Component={TouchableScale}
-            friction={50}
-            tension={100}
-            activeScale={0.95}
-        />
+    handleSongDelete = (item, index) => {
+        deleteThisSong(item.sn);
+        let musicsList = this.state.musicsList;
+        musicsList.splice(index, 1);
+        this.setState({
+            musicsList:musicsList,
+        });
+    }
+
+    updateSearch = (searchText) => {
+        if (searchText.length > 0) {
+            let musicsList = this.state.originalMusicsList.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
+            this.setState({
+                musicsList: musicsList,
+            });
+        } else {
+            let list = this.state.originalMusicsList;
+            this.setState({
+                musicsList: list,
+            })
+        }
+    };
+
+    // close/open swipes
+    onSwipeOpen(rowIndex) {
+        this.setState({
+            rowIndex: rowIndex
+        })
+    }
+
+    onSwipeClose(rowIndex) {
+        if (rowIndex === this.state.rowIndex) {
+            this.setState({ rowIndex: null });
+        }
+    }
+
+    renderItem = ({ item, index }) => (
+        <Swipeout
+            right={[
+                {
+                    text: 'Delete',
+                    type: 'delete',
+                    onPress: () => this.handleSongDelete(item, index),
+                }
+            ]}
+            autoClose={true}
+            onOpen={() => (this.onSwipeOpen(index))}
+            onClose={() => (this.onSwipeClose(index))}
+            rowIndex={index}
+        >
+            <ListItem
+                title={item.title}
+                titleProps={{ numberOfLines: 1 }}
+                titleStyle={styles.songTitleStyle}
+                subtitle={item.artist}
+                subtitleProps={{ numberOfLines: 1 }}
+                subtitleStyle={styles.songArtistStyle}
+                leftAvatar={{ source: { uri: item.thumbnailUrl } }}
+                onPress={() => this.handleSongTap(item)}
+                containerStyle={styles.songListContainer}
+                Component={TouchableOpacity}
+                friction={50}
+                tension={100}
+                activeScale={0.95}
+                bottomDivider={true}
+            />
+        </Swipeout>
     )
 
     keyExtractor = (item, index) => index.toString()
 
     render() {
+        const { searchInput } = this.state;
         return (
             <ScrollView style={{ backgroundColor: '#efefef' }}>
                 <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+
+                <SearchBar
+                    placeholder={'Search here'}
+                    platform='ios'
+                    onChangeText={(searchText) => this.updateSearch(searchText)}
+                    value={searchInput}
+                />
+
                 <FlatList
                     keyExtractor={this.keyExtractor}
                     data={this.state.musicsList}
-                    renderItem={this.renderItem}
+                    renderItem={(item, index) => this.renderItem(item, index)}
+                    extraData={this.state.rowIndex}
                 />
-                <Text>{this.state.name}</Text>
             </ScrollView>
         );
     }

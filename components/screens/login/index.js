@@ -59,24 +59,24 @@ class LoginScreen extends Component {
     checkInternetConnection = () => {
         // check if device is online
         NetInfo.getConnectionInfo().then(data => {
-            if (data.type == 'wifi' || data.type == 'cellular') {
-                this.setState({ isDeviceOnline: true });
-            } else {
-                this.setState({ isDeviceOnline: false });
+            if (this._isMounted) {
+                if (data.type == 'wifi' || data.type == 'cellular') {
+                    this.setState({ isDeviceOnline: true });
+                } else {
+                    this.setState({ isDeviceOnline: false });
+                }
             }
-            console.log("Connection type", data.type);
-            console.log("Connection effective type", data.effectiveType);
         });
 
         // add event listener to check internet connection
         const listener = data => {
-            if (data.type == 'wifi' || data.type == 'cellular') {
-                this.setState({ isDeviceOnline: true });
-            } else {
-                this.setState({ isDeviceOnline: false });
+            if (this._isMounted) {
+                if (data.type == 'wifi' || data.type == 'cellular') {
+                    this.setState({ isDeviceOnline: true });
+                } else {
+                    this.setState({ isDeviceOnline: false });
+                }
             }
-            console.log("Connection type", data.type);
-            console.log("Connection effective type", data.effectiveType);
         };
 
         // Subscribe

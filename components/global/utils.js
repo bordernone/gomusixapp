@@ -1,7 +1,9 @@
+import { Alert } from 'react-native';
 import RNFS from 'react-native-fs';
 import TrackPlayer from 'react-native-track-player';
+import UserSongs from './database';
 
-export async function playThisSongOffline(sn) {
+export async function playThisSongOffline(sn, title, artist) {
     let filePath = RNFS.DocumentDirectoryPath + '/' + sn + '.';
     let fileExist = true;
     if (await RNFS.exists(filePath + 'mp3')) {
@@ -21,19 +23,71 @@ export async function playThisSongOffline(sn) {
 
         // Adds a track to the queue
         await TrackPlayer.add({
-            id: 'trackId',
+            id: sn,
             url: `file://${filePath}`,
-            title: 'Track Title',
-            artist: 'Track Artist',
+            title: title,
+            artist: artist,
         });
 
         // Starts playing it
         TrackPlayer.play();
         TrackPlayer.setVolume(1);
-        let state = await TrackPlayer.getState();
     } else {
         Alert.alert('Please download it first');
     }
+}
+
+export async function deleteThisSong(sn) {
+    // instantiate a database object
+    var userSongsObj = new UserSongs();
+
+    // delete the song
+    let filePath = RNFS.DocumentDirectoryPath + '/' + sn + '.';
+    let fileExist = true;
+    if (await RNFS.exists(filePath + 'mp3')) {
+        filePath = filePath + 'mp3';
+    } else if (await RNFS.exists(filePath + 'ogg')) {
+        filePath = filePath + 'ogg';
+    } else if (await RNFS.exists(filePath + 'wav')) {
+        filePath = filePath + 'wav';
+    } else {
+        // file doesn't exist
+        fileExist = false;
+    }
+    if (fileExist) {
+        RNFS.unlink(filePath)
+            .then(() => {
+                console.log('Song removed from file system');
+            })
+            // `unlink` will throw an error, if the item to unlink does not exist
+            .catch((err) => {
+                console.log('Could not delete song');
+                console.log(err.message);
+            });
+    }
+
+    // delete thumbnail
+    filePath = RNFS.DocumentDirectoryPath + '/thumbnails/' + sn + '.jpeg';
+    if (await RNFS.exists(filePath)) {
+        fileExist = true;
+    } else {
+        // file doesn't exist
+        fileExist = false;
+    }
+    if (fileExist) {
+        RNFS.unlink(filePath)
+            .then(() => {
+                console.log('thumbnail removed from file system');
+            })
+            // `unlink` will throw an error, if the item to unlink does not exist
+            .catch((err) => {
+                console.log('Could not delete thumbnail');
+                console.log(err.message);
+            });
+    }
+
+    // remove from database
+    userSongsObj.deleteSongEntry(sn);
 }
 
 export async function thumbnailExist(sn) {

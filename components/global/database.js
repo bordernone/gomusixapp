@@ -75,6 +75,25 @@ class UserSongs {
         });
     }
 
+    deleteSongEntry = (sn) => {
+        var _this = this;
+        db.transaction(function (txn){
+            txn.executeSql(
+                'DELETE FROM songsdetail WHERE SN=?',
+                [sn],
+                function (tx, res){
+                    let rowsAffected  =res.rowsAffected;
+                    if (rowsAffected > 0){
+                        console.log('Song removed from database');
+                    } else {
+                        console.warn('Failed to remove from database');
+                        console.log(res);
+                        console.log(tx);
+                    }
+                }
+            );
+        });
+    }
 
     getSongsList = async (_this) => {
         db.transaction(async function (txn) {
@@ -99,6 +118,7 @@ class UserSongs {
                         }
                         _this.setState({
                             musicsList: musicsList,
+                            originalMusicsList: musicsList,
                         });
                         console.log(musicsList);
                     } else {

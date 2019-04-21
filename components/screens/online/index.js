@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Text, View, Image, StatusBar, Alert, FlatList, Platform } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ListItem, Divider, Icon } from 'react-native-elements';
+import { ListItem, Divider, Icon, SearchBar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import NetInfo from '@react-native-community/netinfo';
 import TrackPlayer from 'react-native-track-player';
 import RNFS from 'react-native-fs';
+import Swipeout from 'react-native-swipeout';
 import UserSongs from '../../global/database';
 import { playThisSongOffline } from '../../global/utils';
 import styles from './style';
@@ -16,10 +17,12 @@ class OnlineScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            searchInput: null,
             tokenObtained: false,
             username: '',
             apiToken: '',
             apiRefreshToken: '',
+            originalMusicsList: [],
             myMusicList: [
                 {
                     sn: 1,
@@ -41,16 +44,33 @@ class OnlineScreen extends Component {
         this.getUsername = this.getUsername.bind(this);
         this.getApiToken = this.getApiToken.bind(this);
         this.getApiRefreshToken = this.getApiRefreshToken.bind(this);
+        this.initiate = this.initiate.bind(this);
 
-        this.checkInternetConnection();
-        this.getApiCredentials();
-        this.getMusicFiles();
+        this.initiate();
 
         // initializing TrackPlayer
-        TrackPlayer.setupPlayer();
+        TrackPlayer.setupPlayer()
+            .then(() => {
+                TrackPlayer.updateOptions({
+                    capabilities: [
+                        TrackPlayer.CAPABILITY_PLAY,
+                        TrackPlayer.CAPABILITY_PAUSE,
+                        TrackPlayer.CAPABILITY_STOP,
+                        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+                        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+                    ],
+                    stopWithApp: true
+                });
+            });
 
         // instantiating UserSongs object
         this.userSongsObj = new UserSongs();
+    }
+
+    // initials
+    initiate = async () => {
+        await this.getApiCredentials();
+        this.checkInternetConnection();
     }
 
     // login credential functions
@@ -166,7 +186,6 @@ class OnlineScreen extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.getMusicFiles();
         this.checkInternetConnection();
         this.getApiCredentials();
 
@@ -185,13 +204,8 @@ class OnlineScreen extends Component {
         this.onTrackChange.remove();
     }
 
-    componentDidUpdate(){
-        this.getMusicFiles();
-    }
-
     // Player specific funtions
     getMusicFiles = async () => {
-        this.checkInternetConnection();
 
         if (this.state.tokenObtained == false) {
             await this.getApiCredentials();
@@ -225,7 +239,10 @@ class OnlineScreen extends Component {
                     } else {
                         var musicsList = res;
                         if (this._isMounted) {
-                            this.setState({ myMusicList: musicsList });
+                            this.setState({
+                                myMusicList: musicsList,
+                                originalMusicsList: musicsList,
+                            });
                         }
                     }
                 })
@@ -298,8 +315,6 @@ class OnlineScreen extends Component {
                 } else {
                     this.isDeviceOnline = false;
                 }
-
-                console.log("Connection type", data.type);
             }
         });
 
@@ -307,12 +322,13 @@ class OnlineScreen extends Component {
         const listener = data => {
             if (this._isMounted) {
                 if (data.type == 'wifi' || data.type == 'cellular') {
-                    this.isDeviceOnline = true;
+                    if (this.isDeviceOnline == false) {
+                        this.isDeviceOnline = true;
+                        this.getMusicFiles();
+                    }
                 } else {
                     this.isDeviceOnline = false;
                 }
-
-                console.log("Connection type", data.type);
             }
         };
 
@@ -322,39 +338,67 @@ class OnlineScreen extends Component {
 
     keyExtractor = (item, index) => index.toString()
 
+
+    // user interaction functions
     handleSongTap = (item) => {
-        playThisSongOffline(item.sn)
+        playThisSongOffline(item.sn, item.title, item.artist);
     }
 
+    updateSearch = (searchText) => {
+        if (searchText.length > 0) {
+            let musicsList = this.state.originalMusicsList.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
+            this.setState({
+                myMusicList: musicsList,
+            });
+        } else {
+            let list = this.state.originalMusicsList;
+            this.setState({
+                myMusicList: list,
+            })
+        }
+    };
+
     renderItem = ({ item }) => (
-        <ListItem
-            title={item.title}
-            titleProps={{ numberOfLines: 1 }}
-            titleStyle={styles.songTitleStyle}
-            subtitle={item.artist}
-            subtitleProps={{ numberOfLines: 1 }}
-            subtitleStyle={styles.songArtistStyle}
-            leftAvatar={{ source: { uri: (global.DOMAIN + 'api/songs/thumbnail/?sn=' + item.sn + '&token=' + this.state.apiToken + '&username=' + this.state.username) } }}
-            onPress={() => this.handleSongTap(item)}
-            containerStyle={styles.songListContainer}
-            Component={TouchableScale}
-            friction={90}
-            tension={100} // These props are passed to the parent component (here TouchableScale)
-            activeScale={0.95}
-            rightElement={<Icon
-                reverse
-                name='download'
-                type='font-awesome'
-                color='#27a4de'
-                size={15}
-                onPress={() => this.downloadThisSong(item)} />}
-        />
+        <Swipeout>
+            <ListItem
+                title={item.title}
+                titleProps={{ numberOfLines: 1 }}
+                titleStyle={styles.songTitleStyle}
+                subtitle={item.artist}
+                subtitleProps={{ numberOfLines: 1 }}
+                subtitleStyle={styles.songArtistStyle}
+                leftAvatar={{ source: { uri: (global.DOMAIN + 'api/songs/thumbnail/?sn=' + item.sn + '&token=' + this.state.apiToken + '&username=' + this.state.username) } }}
+                onPress={() => this.handleSongTap(item)}
+                containerStyle={styles.songListContainer}
+                Component={TouchableScale}
+                friction={90}
+                tension={100} // These props are passed to the parent component (here TouchableScale)
+                activeScale={0.95}
+                bottomDivider={true}
+                rightElement={<Icon
+                    reverse
+                    name='download'
+                    type='font-awesome'
+                    color='#27a4de'
+                    size={15}
+                    onPress={() => this.downloadThisSong(item)} />}
+            />
+        </Swipeout>
     )
 
     render() {
+        const { searchInput } = this.state;
         return (
             <ScrollView style={{ backgroundColor: '#efefef' }}>
                 <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+
+                <SearchBar
+                    placeholder={'Search here'}
+                    platform='ios'
+                    onChangeText={(searchText) => this.updateSearch(searchText)}
+                    value={searchInput}
+                />
+
                 <FlatList
                     keyExtractor={this.keyExtractor}
                     data={this.state.myMusicList}
