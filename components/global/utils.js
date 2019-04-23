@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs';
 import TrackPlayer from 'react-native-track-player';
 import UserSongs from './database';
 
-export async function playThisSongOffline(sn, title, artist) {
+export async function playThisSongOffline(sn, title, artist, _this = null) {
     let filePath = RNFS.DocumentDirectoryPath + '/' + sn + '.';
     let fileExist = true;
     if (await RNFS.exists(filePath + 'mp3')) {
@@ -32,8 +32,32 @@ export async function playThisSongOffline(sn, title, artist) {
         // Starts playing it
         TrackPlayer.play();
         TrackPlayer.setVolume(1);
+
+        // update state
+        if (_this != null) {
+            _this.setState({
+                songPlayingSn: sn,
+            })
+        }
     } else {
         Alert.alert('Please download it first');
+    }
+}
+
+export async function playThisPausedSong(_this = null){
+    TrackPlayer.play();
+}
+
+export async function pauseThisSong(_this = null) {
+    TrackPlayer.pause();
+}
+
+export async function isSongPlaying(){
+    let playerState = await TrackPlayer.getState();
+    if (playerState == 'playing'){
+        return true;
+    } else {
+        return false;
     }
 }
 

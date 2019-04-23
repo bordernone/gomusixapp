@@ -22,6 +22,7 @@ class OnlineScreen extends Component {
             username: '',
             apiToken: '',
             apiRefreshToken: '',
+            songPlayingSn: null,
             originalMusicsList: [],
             myMusicList: [
                 {
@@ -341,7 +342,7 @@ class OnlineScreen extends Component {
 
     // user interaction functions
     handleSongTap = (item) => {
-        playThisSongOffline(item.sn, item.title, item.artist);
+        playThisSongOffline(item.sn, item.title, item.artist, this);
     }
 
     updateSearch = (searchText) => {

@@ -17,6 +17,7 @@ class MusicsScreen extends Component {
             originalMusicsList:[],
             musicsList: [],
             rowIndex: null,
+            songPlayingSn: null,
         }
 
         this.navigateToOnline = this.navigateToOnline.bind(this);
@@ -59,7 +60,8 @@ class MusicsScreen extends Component {
 
     // user interaction functions
     handleSongTap = (item) => {
-        playThisSongOffline(item.sn, item.title, item.artist);
+        this.props.navigation.navigate('MediaPlayer', { item:item });
+        //playThisSongOffline(item.sn, item.title, item.artist, this);
     }
 
     handleSongDelete = (item, index) => {

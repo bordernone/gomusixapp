@@ -81,7 +81,7 @@ const dashboardStackWrapper = createStackNavigator(
         },
     },
     {
-        initialRouteName: 'MediaPlayer',
+        initialRouteName: 'Dashboard',
     }
 );
 

@@ -116,10 +116,11 @@ class UserSongs {
                                 thumbnailUrl: thumbnail,
                             });
                         }
-                        _this.setState({
+                        await _this.setState({
                             musicsList: musicsList,
                             originalMusicsList: musicsList,
                         });
+                        console.log('Songs List Loaded');
                         console.log(musicsList);
                     } else {
                         console.log('Cannot get songs list');
