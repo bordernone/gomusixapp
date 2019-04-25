@@ -1,9 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { scale, moderateScale, verticalScale } from '../../global/scaling';
 
 export const carouselWidth = wp('100%');
-export const carouselItemWidth = hp('85%') * 0.5;
+export const carouselItemWidth = wp('85%');
 
 const styles = StyleSheet.create({
     mediaPlayerTopNavContainer: {
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     goBackText: {
         color: '#3c434f',
     },
-    carouselContainer: {
+    carouselContaineriOS: {
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -36,6 +36,26 @@ const styles = StyleSheet.create({
         height: hp('85%'),
         borderBottomWidth:8,
         borderBottomColor:'#27a4de',
+        margin:wp('5%'),
+    },
+    carouselContainerAndroid: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.36,
+        shadowRadius: 6.68,
+        elevation: 11,
+        backgroundColor: 'white',
+        marginTop: 15,
+        marginBottom: 15,
+        padding: scale(20),
+        borderRadius: scale(20),
+        height: hp('85%'),
+        borderBottomWidth:0,
+        borderBottomColor:'#27a4de',
+        margin:wp('5%'),
     },
     mediaPlayerContainer: {
         flexDirection: 'column',

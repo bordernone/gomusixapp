@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createSwitchNavigator, Button } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './components/screens/login';
@@ -63,10 +63,8 @@ const dashboardStackWrapper = createStackNavigator(
                 const { routeName } = navigation.state.routes
                 [navigation.state.index];
                 return {
+                    header:null,
                     title: routeName,
-                    headerStyle: {
-                        //backgroundColor:'#061737',
-                    },
                     headerTitleStyle: {
                         color: '#061737',
                     },
@@ -76,7 +74,7 @@ const dashboardStackWrapper = createStackNavigator(
         MediaPlayer: {
             screen: MediaPlayerScreen,
             navigationOptions: {
-                header:null,
+                header: null,
             },
         },
     },

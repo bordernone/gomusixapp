@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { Text, View, StatusBar, Alert, FlatList } from 'react-native';
+import { Text, View, StatusBar, Alert, FlatList, Platform } from 'react-native';
 import { Image, Icon } from 'react-native-elements';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-navigation';
 import Carousel from 'react-native-snap-carousel';
+import TrackPlayer from 'react-native-track-player';
 import UserSongs from '../../global/database';
 import styles, { carouselItemWidth, carouselWidth } from './style';
-import { playThisSongOffline, pauseThisSong, isSongPlaying , playThisPausedSong} from '../../global/utils';
-
+import { playThisSongOffline, pauseThisSong, isSongPlaying, playThisPausedSong, playingSongSn } from '../../global/utils';
 
 class MediaPlayerScreen extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             firstMove: false,
             songPlayingSn: null,
@@ -37,22 +37,70 @@ class MediaPlayerScreen extends Component {
         // creating database object
         this.userSongsObj = new UserSongs();
 
-        this.initiate();
     }
 
     // component related functions
     _isMounted = false;
-    componentDidMount = () => {
+    componentDidMount = async () => {
         this._isMounted = true;
+
+        this.initiate();
     }
 
-    componentDidUpdate() {
-        if (this._isMounted == true && this.state.firstMove == false && this.state.originalMusicsList.length > 0) {
-            this.moveToCurrentPlayingItem();
-            this.setState({
-                firstMove: true,
-            });
+    componentDidUpdate = async () => {
+
+
+        // moving the carousel to correct position when loaded
+        if (this._isMounted) {
+            if (this.state.originalMusicsList.length > 0) {
+                if (this.state.firstMove == false) {
+                    let isFromMainScreen = false;
+
+                    let isSongPlayingNow = await isSongPlaying();
+                    try {
+                        // if requested from main screen (Music/Online)
+                        isFromMainScreen = true;
+                        let currentItem = this.props.navigation.state.params.item;
+                        if (isSongPlayingNow) {
+                            let currentlyPlayingSongSn = await playingSongSn();
+                            if (currentlyPlayingSongSn != currentItem.sn) {
+                                this.playButtonPressed(currentItem);
+                                await this.setState({
+                                    songPlayingSn: currentItem.sn,
+                                    firstMove: true,
+                                });
+                                this.moveToCurrentPlayingItem(currentItem.sn);
+                            } else {
+                                await this.setState({
+                                    songPlayingSn: currentItem.sn,
+                                    firstMove: true,
+                                });
+                                this.moveToCurrentPlayingItem(currentItem.sn);
+                            }
+                        } else {
+                            this.playButtonPressed(currentItem);
+                            await this.setState({
+                                songPlayingSn: currentItem.sn,
+                                firstMove: true,
+                            });
+                            this.moveToCurrentPlayingItem(currentItem.sn);
+                        }
+                        
+                    } catch (error) {
+                        console.log(isSongPlayingNow);
+                        // if not from main screen
+                        if (isSongPlayingNow) {
+                            let currentlyPlayingSongSn = await playingSongSn();
+                            console.log('Apple');
+                            this.moveToCurrentPlayingItem(currentlyPlayingSongSn);
+                            isFromMainScreen = false;
+                        }
+                    }
+                }
+
+            }
         }
+
     }
 
     // initial function
@@ -60,18 +108,25 @@ class MediaPlayerScreen extends Component {
         // load songs list
         await this.getSongsList();
 
-        // if requested from main screen (Music/Online)
-        try {
-            let currentItem = this.props.navigation.state.params.item;
-            this.playButtonPressed(currentItem);
+        // if song is playing
+        if (await isSongPlaying()){
             await this.setState({
-                songPlayingSn:currentItem.sn,
-                firstMove:false,
+                songPlayingSn: await playingSongSn(),
+                isSongPlaying: true,
             });
-            this.moveToCurrentPlayingItem();
-        } catch (error){
-            console.log(error);
         }
+
+        // Adds an event handler for the playback-state
+        this.onTrackChange = TrackPlayer.addEventListener('playback-state', async (data) => {
+
+            const state = await TrackPlayer.getState();
+            if (state=='paused' && this._isMounted == true){
+                this.setState({
+                    isSongPlaying:false,
+                });
+            }
+
+        });
     }
 
     getSongsList = async () => {
@@ -79,7 +134,7 @@ class MediaPlayerScreen extends Component {
     }
 
     indexFromSn = (sn) => {
-        return this.state.musicsList.findIndex(song => song.sn == sn)
+        return this.state.originalMusicsList.findIndex(song => song.sn == sn)
     }
 
     // carousel navigation functions
@@ -94,11 +149,11 @@ class MediaPlayerScreen extends Component {
     moveToItem = (index) => {
         setTimeout(() => {
             this._carousel.snapToItem(index);
-        }, 1000);
+        }, 500);
     }
 
-    moveToCurrentPlayingItem = () => {
-        let currentPlayingIndex = this.indexFromSn(this.state.songPlayingSn);
+    moveToCurrentPlayingItem = (sn) => {
+        let currentPlayingIndex = this.indexFromSn(sn);
         let currentPositionCarousel = this._carousel.currentIndex;
         if (currentPlayingIndex != currentPositionCarousel) {
             this.moveToItem(currentPlayingIndex);
@@ -109,22 +164,23 @@ class MediaPlayerScreen extends Component {
     navigateToDashboard = () => {
         this.props.navigation.navigate('Dashboard');
     }
+
     // user interaction functions
     playButtonPressed = async (item) => {
         if (this.state.songPlayingSn == item.sn && await isSongPlaying() == true) {
             pauseThisSong(this);
             this.setState({
-                isSongPlaying:false,
+                isSongPlaying: false,
             });
         } else if (this.state.songPlayingSn == item.sn) {
             playThisPausedSong();
             this.setState({
-                isSongPlaying:true,
+                isSongPlaying: true,
             });
         } else {
             playThisSongOffline(item.sn, item.title, item.artist, this);
             this.setState({
-                isSongPlaying:true,
+                isSongPlaying: true,
             });
         }
     }
@@ -133,7 +189,7 @@ class MediaPlayerScreen extends Component {
         return (
             <SafeAreaView>
                 <View style={styles.mediaPlayerTopNavContainer}>
-                    <TouchableOpacity style={styles.backButtonContainer} onPress={() => {this.navigateToDashboard();}}>
+                    <TouchableOpacity style={styles.backButtonContainer} onPress={() => { this.navigateToDashboard(); }}>
                         <Text style={styles.goBackText}>{'< Go Back'}</Text>
                     </TouchableOpacity>
                 </View>
@@ -144,7 +200,7 @@ class MediaPlayerScreen extends Component {
                         data={this.state.musicsList}
                         renderItem={({ item, index }) => {
                             return (
-                                <View style={styles.carouselContainer}>
+                                <View style={Platform.OS == 'ios' ? styles.carouselContaineriOS : styles.carouselContainerAndroid}>
                                     <View style={styles.songThumbnailContainer}>
                                         <Image
                                             containerStyle={styles.songThumbnailImgContainer}
@@ -169,7 +225,7 @@ class MediaPlayerScreen extends Component {
                                             color='#27a4de'
                                             onPress={() => { this.moveToPrev(); }} />
                                         <Icon
-                                            name={this.state.songPlayingSn == item.sn && this.state.isSongPlaying == true? 'pause-circle' : 'play-circle'}
+                                            name={this.state.songPlayingSn == item.sn && this.state.isSongPlaying == true ? 'pause-circle' : 'play-circle'}
                                             type='font-awesome'
                                             color='#27a4de'
                                             size={80}

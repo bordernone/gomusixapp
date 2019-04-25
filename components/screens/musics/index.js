@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { Text, View, Image, StatusBar, Alert, FlatList } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { ListItem, Divider , SearchBar} from 'react-native-elements';
+import { ListItem, Divider, SearchBar, Header, Icon } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import RNFS from 'react-native-fs';
 import Swipeout from 'react-native-swipeout';
 import UserSongs from '../../global/database';
 import styles from './style';
-import { playThisSongOffline, deleteThisSong } from '../../global/utils';
+import { playThisSongOffline, deleteThisSong, setMusicsListChangedFlagTrue, isMusicsListChanged } from '../../global/utils';
 
 class MusicsScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
             searchInput: null,
-            originalMusicsList:[],
+            originalMusicsList: [],
             musicsList: [],
             rowIndex: null,
             songPlayingSn: null,
@@ -29,12 +29,25 @@ class MusicsScreen extends Component {
         this.onSwipeOpen = this.onSwipeOpen.bind(this);
         this.handleSongDelete = this.handleSongDelete.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
+        this.updateMusicsList = this.updateMusicsList.bind(this);
 
         // creating database object
         this.userSongsObj = new UserSongs();
 
         this.initiate();
 
+    }
+
+    // Component functions
+    componentDidMount() {
+
+        // event listener if this screen is focused
+        this.didFocusListener = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this.updateMusicsList();
+            },
+        );
     }
 
     navigateToOnline() {
@@ -58,9 +71,15 @@ class MusicsScreen extends Component {
         return RNFS.DocumentDirectoryPath + '/thumbnails/' + fileName;
     }
 
+    updateMusicsList = async () => {
+        if (await isMusicsListChanged()) {
+            this.getSongsList();
+        }
+    }
+
     // user interaction functions
     handleSongTap = (item) => {
-        this.props.navigation.navigate('MediaPlayer', { item:item });
+        this.props.navigation.navigate('MediaPlayer', { item: item });
         //playThisSongOffline(item.sn, item.title, item.artist, this);
     }
 
@@ -69,7 +88,7 @@ class MusicsScreen extends Component {
         let musicsList = this.state.musicsList;
         musicsList.splice(index, 1);
         this.setState({
-            musicsList:musicsList,
+            musicsList: musicsList,
         });
     }
 
@@ -113,6 +132,7 @@ class MusicsScreen extends Component {
             onOpen={() => (this.onSwipeOpen(index))}
             onClose={() => (this.onSwipeClose(index))}
             rowIndex={index}
+            sensitivity={100}
         >
             <ListItem
                 title={item.title}
@@ -138,23 +158,39 @@ class MusicsScreen extends Component {
     render() {
         const { searchInput } = this.state;
         return (
-            <ScrollView style={{ backgroundColor: '#efefef' }}>
-                <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-
-                <SearchBar
-                    placeholder={'Search here'}
-                    platform='ios'
-                    onChangeText={(searchText) => this.updateSearch(searchText)}
-                    value={searchInput}
+            <View style={{ backgroundColor: '#efefef', minHeight:'100%'}}>
+                <Header
+                    //leftComponent={{ icon: 'menu', color: '#fff' }}
+                    placement={'center'}
+                    centerComponent={{ text: 'Musics', style: { color: '#061737' } }}
+                    rightComponent={<Icon
+                        name='music'
+                        type='font-awesome'
+                        onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
+                        color={'#27a4de'} />}
+                    backgroundColor={'white'}
+                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
                 />
 
-                <FlatList
-                    keyExtractor={this.keyExtractor}
-                    data={this.state.musicsList}
-                    renderItem={(item, index) => this.renderItem(item, index)}
-                    extraData={this.state.rowIndex}
-                />
-            </ScrollView>
+                <ScrollView style={{ backgroundColor: '#efefef' }}>
+                    <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+
+                    <SearchBar
+                        placeholder={'Search here'}
+                        platform='ios'
+                        onChangeText={(searchText) => this.updateSearch(searchText)}
+                        value={searchInput}
+                    />
+
+                    <FlatList
+                        style={{ paddingBottom: 80 }}
+                        keyExtractor={this.keyExtractor}
+                        data={this.state.musicsList}
+                        renderItem={(item, index) => this.renderItem(item, index)}
+                        extraData={this.state.rowIndex}
+                    />
+                </ScrollView>
+            </View>
         );
     }
 }

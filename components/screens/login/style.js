@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         paddingLeft:scale(30),
         paddingRight:scale(30),
         borderRadius:8,
-        width:'100%',
+        //width:'100%',
     },
     loginTitle:{
         fontSize:scale(15),

@@ -2,6 +2,20 @@ import { Alert } from 'react-native';
 import RNFS from 'react-native-fs';
 import TrackPlayer from 'react-native-track-player';
 import UserSongs from './database';
+import AsyncStorage from '@react-native-community/async-storage';
+
+export async function setMusicsListChangedFlagTrue() {
+    await AsyncStorage.setItem('@GoMusix:musicsListChanged', 'true');
+}
+
+export async function isMusicsListChanged(){
+    let flag = await AsyncStorage.getItem('@GoMusix:musicsListChanged');
+    if (flag == 'true'){
+        return true;
+    } else {
+        return false;
+    }
+}
 
 export async function playThisSongOffline(sn, title, artist, _this = null) {
     let filePath = RNFS.DocumentDirectoryPath + '/' + sn + '.';
@@ -27,6 +41,7 @@ export async function playThisSongOffline(sn, title, artist, _this = null) {
             url: `file://${filePath}`,
             title: title,
             artist: artist,
+            artwork: await getLocalThumbnailUrl(sn),
         });
 
         // Starts playing it
@@ -54,11 +69,15 @@ export async function pauseThisSong(_this = null) {
 
 export async function isSongPlaying(){
     let playerState = await TrackPlayer.getState();
-    if (playerState == 'playing'){
+    if (playerState == TrackPlayer.STATE_PLAYING){
         return true;
     } else {
         return false;
     }
+}
+
+export async function playingSongSn(){
+    return await TrackPlayer.getCurrentTrack();
 }
 
 export async function deleteThisSong(sn) {

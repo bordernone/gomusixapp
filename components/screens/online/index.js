@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { Text, View, Image, StatusBar, Alert, FlatList, Platform } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ListItem, Divider, Icon, SearchBar } from 'react-native-elements';
+import { ListItem, Divider, Icon, SearchBar, Header } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import NetInfo from '@react-native-community/netinfo';
 import TrackPlayer from 'react-native-track-player';
 import RNFS from 'react-native-fs';
 import Swipeout from 'react-native-swipeout';
 import UserSongs from '../../global/database';
-import { playThisSongOffline } from '../../global/utils';
+import { playThisSongOffline, setMusicsListChangedFlagTrue } from '../../global/utils';
+import { logoutUser } from '../../global/auth';
 import styles from './style';
 import '../../global/config';
 
@@ -36,7 +37,6 @@ class OnlineScreen extends Component {
 
         this.isDeviceOnline = false;
         this.navigateToMusics = this.navigateToMusics.bind(this);
-        this.logoutUser = this.logoutUser.bind(this);
         this.getApiCredentials = this.getApiCredentials.bind(this);
         this.getMusicFiles = this.getMusicFiles.bind(this);
         this.refreshToken = this.refreshToken.bind(this);
@@ -48,21 +48,6 @@ class OnlineScreen extends Component {
         this.initiate = this.initiate.bind(this);
 
         this.initiate();
-
-        // initializing TrackPlayer
-        TrackPlayer.setupPlayer()
-            .then(() => {
-                TrackPlayer.updateOptions({
-                    capabilities: [
-                        TrackPlayer.CAPABILITY_PLAY,
-                        TrackPlayer.CAPABILITY_PAUSE,
-                        TrackPlayer.CAPABILITY_STOP,
-                        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-                        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-                    ],
-                    stopWithApp: true
-                });
-            });
 
         // instantiating UserSongs object
         this.userSongsObj = new UserSongs();
@@ -277,6 +262,9 @@ class OnlineScreen extends Component {
             // downloading the thumbnail
             _this.downloadThisSongThumbnail(item.sn);
             console.log(`${RNFS.DocumentDirectoryPath}/${fileName}`);
+
+            // setting musics list changed flag true
+            setMusicsListChangedFlagTrue();
         }
     }
 
@@ -301,10 +289,6 @@ class OnlineScreen extends Component {
             });
             console.log(`${RNFS.DocumentDirectoryPath}/thumbnails/${fileName}`);
         }
-    }
-
-    logoutUser = () => {
-        AsyncStorage.clear();
     }
 
     checkInternetConnection = () => {
@@ -390,22 +374,39 @@ class OnlineScreen extends Component {
     render() {
         const { searchInput } = this.state;
         return (
-            <ScrollView style={{ backgroundColor: '#efefef' }}>
-                <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-
-                <SearchBar
-                    placeholder={'Search here'}
-                    platform='ios'
-                    onChangeText={(searchText) => this.updateSearch(searchText)}
-                    value={searchInput}
+            <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
+                <Header
+                    centerComponent={{ text: 'Online', style: { color: '#061737' } }}
+                    rightComponent={<Icon
+                        name='music'
+                        type='font-awesome'
+                        onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
+                        color={'#27a4de'} />}
+                    leftComponent={<Icon
+                        name='sign-out'
+                        type='font-awesome'
+                        onPress={() => { logoutUser(this); }}
+                        color={'#27a4de'} />}
+                    backgroundColor={'white'}
+                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
                 />
+                <ScrollView style={{ backgroundColor: '#efefef', }}>
+                    <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+                    <SearchBar
+                        placeholder={'Search here'}
+                        platform='ios'
+                        onChangeText={(searchText) => this.updateSearch(searchText)}
+                        value={searchInput}
+                    />
 
-                <FlatList
-                    keyExtractor={this.keyExtractor}
-                    data={this.state.myMusicList}
-                    renderItem={this.renderItem}
-                />
-            </ScrollView>
+                    <FlatList
+                        style={{ paddingBottom: 80 }}
+                        keyExtractor={this.keyExtractor}
+                        data={this.state.myMusicList}
+                        renderItem={this.renderItem}
+                    />
+                </ScrollView>
+            </View>
         );
     }
 }
