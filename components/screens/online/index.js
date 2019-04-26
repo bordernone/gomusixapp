@@ -344,31 +344,29 @@ class OnlineScreen extends Component {
     };
 
     renderItem = ({ item }) => (
-        <Swipeout>
-            <ListItem
-                title={item.title}
-                titleProps={{ numberOfLines: 1 }}
-                titleStyle={styles.songTitleStyle}
-                subtitle={item.artist}
-                subtitleProps={{ numberOfLines: 1 }}
-                subtitleStyle={styles.songArtistStyle}
-                leftAvatar={{ source: { uri: (global.DOMAIN + 'api/songs/thumbnail/?sn=' + item.sn + '&token=' + this.state.apiToken + '&username=' + this.state.username) } }}
-                onPress={() => this.handleSongTap(item)}
-                containerStyle={styles.songListContainer}
-                Component={TouchableScale}
-                friction={90}
-                tension={100} // These props are passed to the parent component (here TouchableScale)
-                activeScale={0.95}
-                bottomDivider={true}
-                rightElement={<Icon
-                    reverse
-                    name='download'
-                    type='font-awesome'
-                    color='#27a4de'
-                    size={15}
-                    onPress={() => this.downloadThisSong(item)} />}
-            />
-        </Swipeout>
+        <ListItem
+            title={item.title}
+            titleProps={{ numberOfLines: 1 }}
+            titleStyle={styles.songTitleStyle}
+            subtitle={item.artist}
+            subtitleProps={{ numberOfLines: 1 }}
+            subtitleStyle={styles.songArtistStyle}
+            leftAvatar={{ source: { uri: (global.DOMAIN + 'api/songs/thumbnail/?sn=' + item.sn + '&token=' + this.state.apiToken + '&username=' + this.state.username) } }}
+            onPress={() => this.handleSongTap(item)}
+            containerStyle={styles.songListContainer}
+            Component={TouchableScale}
+            friction={90}
+            tension={100} // These props are passed to the parent component (here TouchableScale)
+            activeScale={0.95}
+            bottomDivider={true}
+            rightElement={<Icon
+                reverse
+                name='download'
+                type='font-awesome'
+                color='#27a4de'
+                size={15}
+                onPress={() => this.downloadThisSong(item)} />}
+        />
     )
 
     render() {
@@ -377,16 +375,25 @@ class OnlineScreen extends Component {
             <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
                     centerComponent={{ text: 'Online', style: { color: '#061737' } }}
-                    rightComponent={<Icon
-                        name='music'
-                        type='font-awesome'
-                        onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
-                        color={'#27a4de'} />}
-                    leftComponent={<Icon
-                        name='sign-out'
-                        type='font-awesome'
-                        onPress={() => { logoutUser(this); }}
-                        color={'#27a4de'} />}
+                    rightComponent={
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
+                            style={{ padding: 8, }}>
+                            <Icon
+                                name='music'
+                                type='font-awesome'
+                                color={'#27a4de'}
+                            />
+                        </TouchableOpacity>
+                    }
+                    leftComponent={
+                        <TouchableOpacity
+                            onPress={() => { logoutUser(this); }}
+                            style={{ padding: 8, }}><Icon
+                                name='sign-out'
+                                type='font-awesome'
+                                color={'#27a4de'} />
+                        </TouchableOpacity>}
                     backgroundColor={'white'}
                     containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
                 />

@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         padding: scale(8),
         margin: scale(5),
+        alignItems:'center',
+        justifyContent:'center',
+        flexDirection:'row',
     },
     goBackText: {
         color: '#3c434f',
@@ -53,8 +56,6 @@ const styles = StyleSheet.create({
         padding: scale(20),
         borderRadius: scale(20),
         height: hp('85%'),
-        borderBottomWidth:0,
-        borderBottomColor:'#27a4de',
         margin:wp('5%'),
     },
     mediaPlayerContainer: {

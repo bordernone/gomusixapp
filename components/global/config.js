@@ -1,3 +1,3 @@
 import {Platform} from 'react-native';
 
-global.DOMAIN = 'http://192.168.1.16:8000/';
+global.DOMAIN = 'https://gomusix.herokuapp.com/'; // remember to add '/' at the end of the url

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StatusBar, Alert, FlatList } from 'react-native';
+import { View, StatusBar, Alert, FlatList } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { ListItem, Divider, SearchBar, Header, Icon } from 'react-native-elements';
-import TouchableScale from 'react-native-touchable-scale';
+import { ListItem, SearchBar, Header, Icon } from 'react-native-elements';
 import RNFS from 'react-native-fs';
-import Swipeout from 'react-native-swipeout';
 import UserSongs from '../../global/database';
 import styles from './style';
-import { playThisSongOffline, deleteThisSong, setMusicsListChangedFlagTrue, isMusicsListChanged } from '../../global/utils';
+import { playThisSongOffline, deleteThisSong, isMusicsListChanged } from '../../global/utils';
 
 class MusicsScreen extends Component {
     constructor(props) {
@@ -79,8 +77,8 @@ class MusicsScreen extends Component {
 
     // user interaction functions
     handleSongTap = (item) => {
-        this.props.navigation.navigate('MediaPlayer', { item: item });
-        //playThisSongOffline(item.sn, item.title, item.artist, this);
+        playThisSongOffline(item.sn, item.title, item.artist);
+        this.props.navigation.navigate('MediaPlayer');
     }
 
     handleSongDelete = (item, index) => {
@@ -120,37 +118,22 @@ class MusicsScreen extends Component {
     }
 
     renderItem = ({ item, index }) => (
-        <Swipeout
-            right={[
-                {
-                    text: 'Delete',
-                    type: 'delete',
-                    onPress: () => this.handleSongDelete(item, index),
-                }
-            ]}
-            autoClose={true}
-            onOpen={() => (this.onSwipeOpen(index))}
-            onClose={() => (this.onSwipeClose(index))}
-            rowIndex={index}
-            sensitivity={100}
-        >
-            <ListItem
-                title={item.title}
-                titleProps={{ numberOfLines: 1 }}
-                titleStyle={styles.songTitleStyle}
-                subtitle={item.artist}
-                subtitleProps={{ numberOfLines: 1 }}
-                subtitleStyle={styles.songArtistStyle}
-                leftAvatar={{ source: { uri: item.thumbnailUrl } }}
-                onPress={() => this.handleSongTap(item)}
-                containerStyle={styles.songListContainer}
-                Component={TouchableOpacity}
-                friction={50}
-                tension={100}
-                activeScale={0.95}
-                bottomDivider={true}
-            />
-        </Swipeout>
+        <ListItem
+            title={item.title}
+            titleProps={{ numberOfLines: 1 }}
+            titleStyle={styles.songTitleStyle}
+            subtitle={item.artist}
+            subtitleProps={{ numberOfLines: 1 }}
+            subtitleStyle={styles.songArtistStyle}
+            leftAvatar={{ source: { uri: item.thumbnailUrl } }}
+            onPress={() => this.handleSongTap(item)}
+            containerStyle={styles.songListContainer}
+            Component={TouchableOpacity}
+            friction={50}
+            tension={100}
+            activeScale={0.95}
+            bottomDivider={true}
+        />
     )
 
     keyExtractor = (item, index) => index.toString()
@@ -158,16 +141,20 @@ class MusicsScreen extends Component {
     render() {
         const { searchInput } = this.state;
         return (
-            <View style={{ backgroundColor: '#efefef', minHeight:'100%'}}>
+            <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
                     //leftComponent={{ icon: 'menu', color: '#fff' }}
                     placement={'center'}
                     centerComponent={{ text: 'Musics', style: { color: '#061737' } }}
-                    rightComponent={<Icon
-                        name='music'
-                        type='font-awesome'
+                    rightComponent={<TouchableOpacity
                         onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
-                        color={'#27a4de'} />}
+                        style={{ padding: 8, }}>
+                        <Icon
+                            name='music'
+                            type='font-awesome'
+                            color={'#27a4de'}
+                        />
+                    </TouchableOpacity>}
                     backgroundColor={'white'}
                     containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
                 />

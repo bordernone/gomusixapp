@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
         color:'white',
         fontSize:scale(50),
         fontFamily:'Optima-Italic',
+        fontStyle:'italic',
     },
     textBlue:{
         color:'#27a4de',

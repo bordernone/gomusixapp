@@ -47,57 +47,27 @@ class MediaPlayerScreen extends Component {
         this.initiate();
     }
 
+    componentWillUnmount(){
+        this._isMounted = false;
+    }
+
     componentDidUpdate = async () => {
-
-
         // moving the carousel to correct position when loaded
         if (this._isMounted) {
-            if (this.state.originalMusicsList.length > 0) {
-                if (this.state.firstMove == false) {
-                    let isFromMainScreen = false;
-
+            if (this.state.firstMove == false) {
+                if (this.state.originalMusicsList.length > 0) {
                     let isSongPlayingNow = await isSongPlaying();
-                    try {
-                        // if requested from main screen (Music/Online)
-                        isFromMainScreen = true;
-                        let currentItem = this.props.navigation.state.params.item;
-                        if (isSongPlayingNow) {
-                            let currentlyPlayingSongSn = await playingSongSn();
-                            if (currentlyPlayingSongSn != currentItem.sn) {
-                                this.playButtonPressed(currentItem);
-                                await this.setState({
-                                    songPlayingSn: currentItem.sn,
-                                    firstMove: true,
-                                });
-                                this.moveToCurrentPlayingItem(currentItem.sn);
-                            } else {
-                                await this.setState({
-                                    songPlayingSn: currentItem.sn,
-                                    firstMove: true,
-                                });
-                                this.moveToCurrentPlayingItem(currentItem.sn);
-                            }
-                        } else {
-                            this.playButtonPressed(currentItem);
-                            await this.setState({
-                                songPlayingSn: currentItem.sn,
-                                firstMove: true,
-                            });
-                            this.moveToCurrentPlayingItem(currentItem.sn);
-                        }
-                        
-                    } catch (error) {
-                        console.log(isSongPlayingNow);
-                        // if not from main screen
-                        if (isSongPlayingNow) {
-                            let currentlyPlayingSongSn = await playingSongSn();
-                            console.log('Apple');
-                            this.moveToCurrentPlayingItem(currentlyPlayingSongSn);
-                            isFromMainScreen = false;
-                        }
+                    // if not from main screen
+                    if (isSongPlayingNow) {
+                        let currentlyPlayingSongSn = await playingSongSn();
+                        this.moveToCurrentPlayingItem(currentlyPlayingSongSn);
+                        await this.setState({
+                            firstMove: true,
+                            songPlayingSn: currentlyPlayingSongSn,
+                            isSongPlaying: true,
+                        });
                     }
                 }
-
             }
         }
 
@@ -108,24 +78,14 @@ class MediaPlayerScreen extends Component {
         // load songs list
         await this.getSongsList();
 
-        // if song is playing
-        if (await isSongPlaying()){
-            await this.setState({
-                songPlayingSn: await playingSongSn(),
-                isSongPlaying: true,
-            });
-        }
-
         // Adds an event handler for the playback-state
         this.onTrackChange = TrackPlayer.addEventListener('playback-state', async (data) => {
-
             const state = await TrackPlayer.getState();
-            if (state=='paused' && this._isMounted == true){
+            if (state == TrackPlayer.STATE_PAUSED && this._isMounted == true) {
                 this.setState({
-                    isSongPlaying:false,
+                    isSongPlaying: false,
                 });
             }
-
         });
     }
 
@@ -169,19 +129,25 @@ class MediaPlayerScreen extends Component {
     playButtonPressed = async (item) => {
         if (this.state.songPlayingSn == item.sn && await isSongPlaying() == true) {
             pauseThisSong(this);
-            this.setState({
-                isSongPlaying: false,
-            });
+            if (this._isMounted) {
+                this.setState({
+                    isSongPlaying: false,
+                });
+            }
         } else if (this.state.songPlayingSn == item.sn) {
             playThisPausedSong();
-            this.setState({
-                isSongPlaying: true,
-            });
+            if (this._isMounted) {
+                this.setState({
+                    isSongPlaying: true,
+                });
+            }
         } else {
             playThisSongOffline(item.sn, item.title, item.artist, this);
-            this.setState({
-                isSongPlaying: true,
-            });
+            if (this._isMounted) {
+                this.setState({
+                    isSongPlaying: true,
+                });
+            }
         }
     }
 
@@ -206,6 +172,7 @@ class MediaPlayerScreen extends Component {
                                             containerStyle={styles.songThumbnailImgContainer}
                                             style={styles.songThumbnailImg}
                                             source={{ uri: item.thumbnailUrl }}
+                                            elevation={1}
                                         />
                                     </View>
 
