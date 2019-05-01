@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StatusBar, Alert, FlatList } from 'react-native';
+import { View, StatusBar, Alert, FlatList, Platform } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { ListItem, SearchBar, Header, Icon } from 'react-native-elements';
 import RNFS from 'react-native-fs';
@@ -143,7 +143,6 @@ class MusicsScreen extends Component {
         return (
             <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
-                    //leftComponent={{ icon: 'menu', color: '#fff' }}
                     placement={'center'}
                     centerComponent={{ text: 'Musics', style: { color: '#061737' } }}
                     rightComponent={<TouchableOpacity
@@ -156,7 +155,7 @@ class MusicsScreen extends Component {
                         />
                     </TouchableOpacity>}
                     backgroundColor={'white'}
-                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
+                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de',marginTop: Platform.OS === 'ios' ? 0 : - 26,  }}
                 />
 
                 <ScrollView style={{ backgroundColor: '#efefef' }}>

@@ -1,8 +1,11 @@
-import React, {Component} from 'react';
-import {Text, View, Image, StatusBar, Alert} from 'react-native';
-import {Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { Component } from 'react';
+import { Text, View, Image, StatusBar, Alert, Platform } from 'react-native';
+import { Button, Header, Icon } from 'react-native-elements';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import { material, sanFranciscoWeights } from 'react-native-typography'
 import styles from './style';
+import { SafeAreaView } from 'react-navigation';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 class OfflineScreen extends Component {
     constructor(props) {
@@ -17,24 +20,37 @@ class OfflineScreen extends Component {
 
     render() {
         return (
-            <View style={styles.mainWrapper}>
-
-                <View style={styles.components} >
-                    <Text style={styles.notLoggedInMsg}>You are not logged in!</Text>
+            <SafeAreaView>
+                <Header
+                    placement={'center'}
+                    rightComponent={<TouchableOpacity
+                        onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
+                        style={{ padding: 8, }}>
+                        <Icon
+                            name='music'
+                            type='font-awesome'
+                            color={'#27a4de'}
+                        />
+                    </TouchableOpacity>}
+                    backgroundColor={'white'}
+                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de', marginTop: Platform.OS === 'ios' ? 0 : - 26, }}
+                />
+                <View style={styles.contentWrapper}>
+                    <Text style={material.display1}>You're not logged in!</Text>
                     <Button
-                        onPress={() => this.navigateToLogin()}
                         icon={
-                            <Icon
+                            <IconFontAwesome
                                 name="sign-in"
-                                size={20}
+                                size={15}
                                 color="white"
-                                />
+                            />
                         }
                         iconLeft
-                        title=" Login in now"
-                        />
+                        title="  Login"
+                        onPress={() => {this.props.navigation.navigate('Login')}}
+                    />
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }

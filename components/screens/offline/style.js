@@ -3,21 +3,15 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { scale, moderateScale, verticalScale} from '../../global/scaling';
 
 const styles = StyleSheet.create({
-    mainWrapper:{
-        paddingTop:10,
-        backgroundColor:'#061737',
-        flex:1,
-        flexDirection:'row',
+    contentWrapper:{
+        height:'100%',
         alignItems:'center',
-    },
-    components:{
-        flex:1,
-        flexDirection:'column',
+        justifyContent:'center',
     },
     notLoggedInMsg:{
-        color:'white',
+        color:'black',
         textAlign:'center',
-        fontSize:scale(30),
+        fontSize:moderateScale(25),
         margin:8,
     },
 });
