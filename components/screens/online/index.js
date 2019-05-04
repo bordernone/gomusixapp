@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StatusBar, Alert, FlatList } from 'react-native';
+import { Text, View, Image, StatusBar, Alert, FlatList, Platform } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { ListItem, Icon, SearchBar, Header } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
@@ -174,7 +174,6 @@ class OnlineScreen extends Component {
         return (
             <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
-                    outerContainerStyles={{ height: Platform.OS === 'ios' ? 70 : 70 - 24 }}
                     centerComponent={{ text: 'Online', style: { color: '#061737' } }}
                     rightComponent={
                         <TouchableOpacity
@@ -196,7 +195,7 @@ class OnlineScreen extends Component {
                                 color={'#27a4de'} />
                         </TouchableOpacity>}
                     backgroundColor={'white'}
-                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de' }}
+                    containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de', marginTop: Platform.OS === 'ios' ? 0 : - 26, }}
                 />
                 <ScrollView style={{ backgroundColor: '#efefef', }}>
                     <StatusBar barStyle="dark-content" backgroundColor="transparent" />

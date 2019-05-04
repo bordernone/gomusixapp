@@ -3,6 +3,7 @@ package com.gomusix;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
 import com.guichaguri.trackplayer.TrackPlayer;
 import com.rnfs.RNFSPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RNDefaultPreferencePackage(),
                     new TrackPlayer(),
                     new RNFSPackage(),
                     new NetInfoPackage(),

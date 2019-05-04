@@ -154,6 +154,14 @@ class MusicsScreen extends Component {
                             color={'#27a4de'}
                         />
                     </TouchableOpacity>}
+                    leftComponent={
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.toggleDrawer(); }}
+                            style={{ padding: 8, }}><Icon
+                                name='bars'
+                                type='font-awesome'
+                                color={'#27a4de'} />
+                        </TouchableOpacity>}
                     backgroundColor={'white'}
                     containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de',marginTop: Platform.OS === 'ios' ? 0 : - 26,  }}
                 />

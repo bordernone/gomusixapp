@@ -1,152 +1,139 @@
 import React, { Component } from 'react';
-import { Text, View, StatusBar, Alert, FlatList, Platform } from 'react-native';
-import { Image, Icon } from 'react-native-elements';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-navigation';
-import Carousel from 'react-native-snap-carousel';
+import { Image, Icon } from 'react-native-elements';
+import Placeholder from 'rn-placeholder';
 import TrackPlayer from 'react-native-track-player';
+import { isSongPlaying, playingSongSn, playThisPausedSong, playThisSongOffline, pauseThisSong } from '../../global/utils';
 import UserSongs from '../../global/database';
-import styles, { carouselItemWidth, carouselWidth } from './style';
-import { playThisSongOffline, pauseThisSong, isSongPlaying, playThisPausedSong, playingSongSn } from '../../global/utils';
+import styles from './style';
 
 class MediaPlayerScreen extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            firstMove: false,
-            songPlayingSn: null,
-            firstItemIndex: null,
-            isSongPlaying: false,
-            playButtonIcon: 'play-circle',
-            originalMusicsList: [],
-            musicsList: [],
+            currentlyPlayingSong: {
+                sn: 1,
+                title: 'Title',
+                artist: 'Artist',
+                thumbnailUrl: ''
+            },
+            isReady: null,
         }
 
-        this.initiate = this.initiate.bind(this);
-        this.indexFromSn = this.indexFromSn.bind(this);
-        this.moveToNext = this.moveToNext.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.getSongsList = this.getSongsList.bind(this);
-        this.moveToPrev = this.moveToPrev.bind(this);
-        this.moveToItem = this.moveToItem.bind(this);
-        this.moveToCurrentPlayingItem = this.moveToCurrentPlayingItem.bind(this);
-        this.playButtonPressed = this.playButtonPressed.bind(this);
         this.navigateToDashboard = this.navigateToDashboard.bind(this);
+        this.indexFromSn = this.indexFromSn.bind(this);
 
         // creating database object
         this.userSongsObj = new UserSongs();
-
     }
 
-    // component related functions
     _isMounted = false;
-    componentDidMount = async () => {
+
+    componentDidMount() {
+        let _this = this;
+
         this._isMounted = true;
 
-        this.initiate();
-    }
-
-    componentWillUnmount(){
-        this._isMounted = false;
-    }
-
-    componentDidUpdate = async () => {
-        // moving the carousel to correct position when loaded
-        if (this._isMounted) {
-            if (this.state.firstMove == false) {
-                if (this.state.originalMusicsList.length > 0) {
-                    let isSongPlayingNow = await isSongPlaying();
-                    // if not from main screen
-                    if (isSongPlayingNow) {
-                        let currentlyPlayingSongSn = await playingSongSn();
-                        this.moveToCurrentPlayingItem(currentlyPlayingSongSn);
-                        await this.setState({
-                            firstMove: true,
-                            songPlayingSn: currentlyPlayingSongSn,
-                            isSongPlaying: true,
-                        });
-                    }
-                }
-            }
-        }
-
-    }
-
-    // initial function
-    initiate = async () => {
-        // load songs list
-        await this.getSongsList();
+        this.initialize();
 
         // Adds an event handler for the playback-state
         this.onTrackChange = TrackPlayer.addEventListener('playback-state', async (data) => {
             const state = await TrackPlayer.getState();
-            if (state == TrackPlayer.STATE_PAUSED && this._isMounted == true) {
-                this.setState({
+            if (state == TrackPlayer.STATE_PLAYING && this._isMounted == true) {
+                _this.updatePlaying();
+                _this.setState({
+                    isSongPlaying: true,
+                });
+            } else if (state == TrackPlayer.STATE_PAUSED && this._isMounted == true) {
+                _this.setState({
                     isSongPlaying: false,
                 });
             }
         });
     }
 
-    getSongsList = async () => {
-        await this.userSongsObj.getSongsList(this);
+    componentWillUnmount() {
+        this._isMounted = false;
+
+        // remove event listener
+        this.onTrackChange.remove();
+    }
+
+    updatePlaying = async () => {
+        if (await isSongPlaying()) {
+            let currentlyPlayingSongSn = await playingSongSn();
+            this.userSongsObj.getSongEntry(this, currentlyPlayingSongSn);
+        }
+    }
+
+    initialize = async () => {
+        if (this._isMounted) {
+            // updating UI
+            if (await isSongPlaying()) {
+                let currentlyPlayingSongSn = await playingSongSn();
+                if (currentlyPlayingSongSn != undefined) {
+                    this.userSongsObj.getSongEntry(this, currentlyPlayingSongSn);
+                }
+
+                this.setState({
+                    isSongPlaying: true,
+                });
+            }
+
+            // getting songs list
+            await this.userSongsObj.getSongsList(this);
+        }
+    }
+
+    navigateToDashboard = () => {
+        this.props.navigation.navigate("Dashboard");
     }
 
     indexFromSn = (sn) => {
         return this.state.originalMusicsList.findIndex(song => song.sn == sn)
     }
 
-    // carousel navigation functions
-    moveToNext = () => {
-        this._carousel.snapToNext();
-    }
-
-    moveToPrev = () => {
-        this._carousel.snapToPrev();
-    }
-
-    moveToItem = (index) => {
-        setTimeout(() => {
-            this._carousel.snapToItem(index);
-        }, 500);
-    }
-
-    moveToCurrentPlayingItem = (sn) => {
-        let currentPlayingIndex = this.indexFromSn(sn);
-        let currentPositionCarousel = this._carousel.currentIndex;
-        if (currentPlayingIndex != currentPositionCarousel) {
-            this.moveToItem(currentPlayingIndex);
+    playButtonPressed = async (item) => {
+        let currentlyPlayingSongSn = await playingSongSn();
+        if (currentlyPlayingSongSn == item.sn && await isSongPlaying() == true) {
+            pauseThisSong(this);
+        } else if (currentlyPlayingSongSn == item.sn) {
+            playThisPausedSong();
+        } else {
+            playThisSongOffline(item.sn, item.title, item.artist, this);
         }
     }
 
-    // navigation functions
-    navigateToDashboard = () => {
-        this.props.navigation.navigate('Dashboard');
+    playNextSong = async () => {
+        let musicsListLength = this.state.originalMusicsList.length;
+        if (musicsListLength > 1) {
+            let currentlyPlayingSongSn = await playingSongSn();
+            if (currentlyPlayingSongSn != undefined) {
+                let currentIndex = this.indexFromSn(currentlyPlayingSongSn);
+                let nextIndex = currentIndex + 1;
+                if (nextIndex >= musicsListLength){
+                    nextIndex = 0;
+                }
+                let nextSong = this.state.originalMusicsList[nextIndex];
+                playThisSongOffline(nextSong.sn, nextSong.title, nextSong.artist, this);
+            }
+        }
     }
 
-    // user interaction functions
-    playButtonPressed = async (item) => {
-        if (this.state.songPlayingSn == item.sn && await isSongPlaying() == true) {
-            pauseThisSong(this);
-            if (this._isMounted) {
-                this.setState({
-                    isSongPlaying: false,
-                });
-            }
-        } else if (this.state.songPlayingSn == item.sn) {
-            playThisPausedSong();
-            if (this._isMounted) {
-                this.setState({
-                    isSongPlaying: true,
-                });
-            }
-        } else {
-            playThisSongOffline(item.sn, item.title, item.artist, this);
-            if (this._isMounted) {
-                this.setState({
-                    isSongPlaying: true,
-                });
+    playPrevSong = async () => {
+        let musicsListLength = this.state.originalMusicsList.length;
+        if (musicsListLength > 1) {
+            let currentlyPlayingSongSn = await playingSongSn();
+            if (currentlyPlayingSongSn != undefined) {
+                let currentIndex = this.indexFromSn(currentlyPlayingSongSn);
+                let nextIndex = currentIndex - 1;
+                if (nextIndex < 0){
+                    nextIndex = musicsListLength - 1;
+                }
+                let nextSong = this.state.originalMusicsList[nextIndex];
+                playThisSongOffline(nextSong.sn, nextSong.title, nextSong.artist, this);
             }
         }
     }
@@ -159,63 +146,73 @@ class MediaPlayerScreen extends Component {
                         <Text style={styles.goBackText}>{'< Go Back'}</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.mediaPlayerContainer}>
-                    <Carousel
-                        layout={'default'}
-                        ref={(c) => { this._carousel = c; }}
-                        data={this.state.musicsList}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <View style={Platform.OS == 'ios' ? styles.carouselContaineriOS : styles.carouselContainerAndroid}>
-                                    <View style={styles.songThumbnailContainer}>
-                                        <Image
-                                            containerStyle={styles.songThumbnailImgContainer}
-                                            style={styles.songThumbnailImg}
-                                            source={{ uri: item.thumbnailUrl }}
-                                            elevation={1}
-                                        />
-                                    </View>
 
-                                    <View style={styles.songTitleContainer}>
-                                        <Text style={styles.songTitleText} numberOfLines={1}>{item.title}</Text>
-                                    </View>
+                <View style={styles.contentContainer}>
+                    <View style={styles.thumbnailContainer}>
+                        <Placeholder.ImageContent
+                            size={200}
+                            animate="shine"
+                            lineNumber={4}
+                            lineSpacing={5}
+                            lastLineWidth="30%"
+                            onReady={this.state.isReady}
+                        >
+                            <Image
+                                containerStyle={styles.songThumbnailImgContainer}
+                                style={styles.songThumbnailImg}
+                                source={{ uri: this.state.currentlyPlayingSong.thumbnailUrl }}
+                                elevation={1}
+                            />
+                        </Placeholder.ImageContent>
+                    </View>
 
-                                    <View style={styles.songArtistContainer}>
-                                        <Text style={styles.songArtistText} numberOfLines={1}>{item.artist}</Text>
-                                    </View>
 
-                                    <View style={styles.mediaPlayerActionContainer}>
-                                        <Icon
-                                            reverse
-                                            name='caret-left'
-                                            type='font-awesome'
-                                            color='#27a4de'
-                                            onPress={() => { this.moveToPrev(); }} />
-                                        <Icon
-                                            name={this.state.songPlayingSn == item.sn && this.state.isSongPlaying == true ? 'pause-circle' : 'play-circle'}
-                                            type='font-awesome'
-                                            color='#27a4de'
-                                            size={80}
-                                            onPress={() => {
-                                                this.playButtonPressed(item);
-                                            }} />
-                                        <Icon
-                                            reverse
-                                            name='caret-right'
-                                            type='font-awesome'
-                                            color='#27a4de'
-                                            onPress={() => { this.moveToNext(); }} />
+                    <View style={styles.songTitleContainer}>
+                        <Placeholder.Line
+                            color="grey"
+                            width="100%"
+                            onReady={this.state.isReady}
+                        >
+                            <Text style={styles.songTitleText} numberOfLines={1}>{this.state.currentlyPlayingSong.title}</Text>
+                        </Placeholder.Line>
+                    </View>
 
-                                    </View>
-                                </View>
-                            );
-                        }}
-                        sliderWidth={carouselWidth}
-                        itemWidth={carouselItemWidth}
-                    />
+                    <View style={styles.songArtistContainer}>
+                        <Placeholder.Line
+                            color="grey"
+                            width="100%"
+                            onReady={this.state.isReady}
+                        >
+                            <Text style={styles.songArtistText} numberOfLines={1}>{this.state.currentlyPlayingSong.artist}</Text>
+                        </Placeholder.Line>
+                    </View>
+
+                    <View style={styles.mediaPlayerActionContainer}>
+                        <Icon
+                            reverse
+                            name='caret-left'
+                            type='font-awesome'
+                            color='#27a4de'
+                            onPress={() => { this.playPrevSong(); }} />
+                        <Icon
+                            name={this.state.isSongPlaying == true ? 'pause-circle' : 'play-circle'}
+                            type='font-awesome'
+                            color='#27a4de'
+                            size={80}
+                            onPress={() => {
+                                this.playButtonPressed(this.state.currentlyPlayingSong);
+                            }} />
+                        <Icon
+                            reverse
+                            name='caret-right'
+                            type='font-awesome'
+                            color='#27a4de'
+                            onPress={() => { this.playNextSong(); }} />
+
+                    </View>
                 </View>
             </SafeAreaView>
-        );
+        )
     }
 }
 

@@ -2,6 +2,9 @@ import { StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { scale, moderateScale, verticalScale } from '../../global/scaling';
 
+export const carouselWidth = wp('100%');
+export const carouselItemWidth = wp('85%');
+
 const styles = StyleSheet.create({
     mediaPlayerTopNavContainer: {
         minHeight: scale(40),
@@ -12,20 +15,57 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         padding: scale(8),
         margin: scale(5),
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
+        alignItems:'center',
+        justifyContent:'center',
+        flexDirection:'row',
     },
     goBackText: {
         color: '#3c434f',
     },
-    contentContainer: {
-        height: verticalScale(600),
-        padding: 10,
-        paddingTop:40,
+    carouselContaineriOS: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.36,
+        shadowRadius: 6.68,
+        elevation: 11,
+        backgroundColor: 'white',
+        marginTop: 15,
+        marginBottom: 15,
+        padding: scale(20),
+        borderRadius: scale(20),
+        height: hp('85%'),
+        borderBottomWidth:8,
+        borderBottomColor:'#27a4de',
+        margin:wp('5%'),
     },
-    thumbnailContainer: {
+    carouselContainerAndroid: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.36,
+        shadowRadius: 6.68,
+        elevation: 11,
+        backgroundColor: 'white',
+        marginTop: 15,
+        marginBottom: 15,
+        padding: scale(20),
+        borderRadius: scale(20),
+        height: hp('85%'),
+        margin:wp('5%'),
+    },
+    mediaPlayerContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
+    },
+    songThumbnailContainer: {
+        alignItems: 'center',
+        paddingTop: 15,
     },
     songThumbnailImgContainer: {
         shadowColor: "#000",
@@ -38,8 +78,8 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     songThumbnailImg: {
-        height: 200,
-        width: 200,
+        width: scale(160),
+        height: scale(160),
     },
     songTitleContainer: {
         padding: 4,
@@ -69,11 +109,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#5b5b5b',
     },
-    mediaPlayerActionContainer: {
-        minHeight: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
+    mediaPlayerActionContainer:{
+        minHeight:5,
+        alignItems:'center',
+        justifyContent:'center',
+        flexDirection:'row',
     },
 });
 

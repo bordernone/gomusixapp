@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StatusBar, Alert, Platform } from 'react-native';
+import { Text, View, Platform } from 'react-native';
 import { Button, Header, Icon } from 'react-native-elements';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-import { material, sanFranciscoWeights } from 'react-native-typography'
+import { material } from 'react-native-typography'
 import styles from './style';
 import { SafeAreaView } from 'react-navigation';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class OfflineScreen extends Component {
     constructor(props) {

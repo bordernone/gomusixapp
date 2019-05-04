@@ -15,6 +15,7 @@ class UserSongs {
         this.updateEntry = this.updateEntry.bind(this);
     }
 
+    // ALWAYS USE THIS METHOD TO ADD NEW ENTRY SINCE IT ACCOUNTS FOR PRE_EXISTING ENTRIES
     newSongEntry = (SN, Artist, Name) => {
         var _this = this;
         db.transaction(function (txn) {
@@ -77,13 +78,13 @@ class UserSongs {
 
     deleteSongEntry = (sn) => {
         var _this = this;
-        db.transaction(function (txn){
+        db.transaction(function (txn) {
             txn.executeSql(
                 'DELETE FROM songsdetail WHERE SN=?',
                 [sn],
-                function (tx, res){
-                    let rowsAffected  =res.rowsAffected;
-                    if (rowsAffected > 0){
+                function (tx, res) {
+                    let rowsAffected = res.rowsAffected;
+                    if (rowsAffected > 0) {
                         console.log('Song removed from database');
                     } else {
                         console.warn('Failed to remove from database');
@@ -95,10 +96,42 @@ class UserSongs {
         });
     }
 
+    getSongEntry = async (_this, sn) => {
+        db.transaction(async function (txn) {
+            txn.executeSql(
+                'SELECT * FROM songsdetail WHERE SN=?',
+                [sn],
+                async function (tx, response) {
+                    let rows = response.rows.length;
+                    if (rows == 1) {
+                        let thisRow = response.rows.item(0);
+                        let thumbnail = await getLocalThumbnailUrl(thisRow.SN);
+                        var song = {
+                            sn: thisRow.SN,
+                            title: thisRow.Name,
+                            artist: thisRow.Artist,
+                            thumbnailUrl: thumbnail,
+                        };
+                        await _this.setState({
+                            currentlyPlayingSong: song,
+                            isReady: true,
+                        });
+                        console.log('Song loaded:');
+                        console.log(song);
+                    } else {
+                        console.log('No such song');
+                        console.log(tx);
+                        console.log(response);
+                    }
+                }
+            )
+        });
+    }
+
     getSongsList = async (_this) => {
         db.transaction(async function (txn) {
             txn.executeSql(
-                'SELECT * FROM songsdetail', [],
+                'SELECT * FROM songsdetail ORDER BY SN', [],
                 async function (tx, response) {
                     let rows = response.rows.length;
                     if (rows > 0) {
