@@ -9,6 +9,18 @@ class LogoutScreen extends Component {
 
         logoutUser(this);
     }
+
+    static navigationOptions = {
+        drawerLabel: 'Logout / Login',
+        drawerIcon: ({ tintColor }) => (
+            <Icon
+                name='sign-out'
+                type='font-awesome'
+                color={'#27a4de'}
+            />
+        ),
+    };
+
     render() {
         return (
             <View></View>

@@ -89,16 +89,6 @@ const dashboardDrawer = createDrawerNavigator({
     },
     Logout: {
         screen: LogoutScreen,
-        navigationOptions: {
-            drawerLabel: 'Logout',
-            drawerIcon: ({ tintColor }) => (
-                <IconRNElements
-                    name='sign-out'
-                    type='font-awesome'
-                    color={'#27a4de'}
-                />
-            ),
-        }
     },
 });
 

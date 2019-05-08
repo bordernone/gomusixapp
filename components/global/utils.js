@@ -2,8 +2,82 @@ import { Alert } from 'react-native';
 import RNFS from 'react-native-fs';
 import TrackPlayer from 'react-native-track-player';
 import UserSongs from './database';
+import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-community/async-storage';
 import { imgData } from './imgdata';
+
+
+// does this song exist
+export async function doesThisSongExist(sn){
+    let filePath = RNFS.DocumentDirectoryPath + '/' + sn + '.';
+    if (await RNFS.exists(filePath + 'mp3')) {
+        return true;
+    } else if (await RNFS.exists(filePath + 'ogg')) {
+        return true;
+    } else if (await RNFS.exists(filePath + 'wav')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// load songs from server for async
+export async function getMusicFilesFromServer(_this) {
+    if (_this.state.tokenObtained != false) {
+        await getApiCredentials(_this);
+    }
+
+    if (_this.isDeviceOnline == true && _this.state.tokenObtained == true) {
+        // sending request
+        var formData = new FormData();
+        let username = await getUsername(_this);
+        let apiToken = await getApiToken(_this);
+        formData.append('username', username);
+        formData.append('token', apiToken);
+        var data = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
+        };
+        fetch(global.DOMAIN + 'api/songs/basic/', data)
+            .then((res) => res.json())
+            .then((res) => {
+                // handle the response
+                if (res.hasOwnProperty('error')) {
+                    console.log('Cannot sync your songs: ' + res);
+                } else {
+                    var musicsList = res;
+                    if (_this._isMounted) {
+                        console.log(musicsList);
+                        _this.setState({
+                            musicsListServer: musicsList,
+                        });
+                    } else {
+                        console.log('component not mounted');
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+}
+
+// check if device is connected to internet
+export async function isDeviceConnectedToInternet(_this) {
+    // check if device is online
+    return NetInfo.getConnectionInfo().then(data => {
+        if (_this._isMounted) {
+            if (data.type == 'wifi' || data.type == 'cellular') {
+                _this.isDeviceOnline = true;
+            } else {
+                _this.isDeviceOnline = false;
+            }
+        }
+    });
+}
 
 // login credential functions
 export async function getApiCredentials(_this) {
@@ -139,20 +213,19 @@ export async function getMusicFiles(_this) {
             .then((res) => {
                 // handle the response
                 if (res.hasOwnProperty('error')) {
-                    if (res.error == 'incorrect token') {
-                        refreshToken(_this);
-                    } else {
-                        console.log(error);
-                    }
+                    console.log('Cannot sync your songs: ' + res);
                 } else {
                     var musicsList = res;
-
-                    if (_this._isMounted) {
-                        _this.setState({
-                            myMusicList: musicsList,
-                            originalMusicsList: musicsList,
-                            isReady: true,
-                        });
+                    if (_this != null) {
+                        if (_this._isMounted) {
+                            _this.setState({
+                                myMusicList: musicsList,
+                                originalMusicsList: musicsList,
+                                isReady: true,
+                            });
+                        }
+                    } else {
+                        return musicsList;
                     }
                 }
             })
@@ -170,7 +243,7 @@ export async function downloadThisSong(_this, item) {
         let fileName = item.sn + '.' + item.extension;
 
         // Downloading the song
-        changeStatusDownload(_this, item.sn);
+        changeStatusDownload(_this, item.sn); // to show downloading animation
         RNFS.downloadFile({
             fromUrl: global.DOMAIN + 'api/songs/play/?sn=' + item.sn + '&username=' + username + '&token=' + apiToken,
             toFile: `${RNFS.DocumentDirectoryPath}/${fileName}`,
@@ -179,7 +252,7 @@ export async function downloadThisSong(_this, item) {
             if (r.statusCode == 200) {
                 console.log(r.statusCode);
                 _this.userSongsObj.newSongEntry(item.sn, item.artist, item.title);
-                changeStatusIdle(_this, item.sn);
+                changeStatusIdle(_this, item.sn); // stop downloading animation
             } else {
                 console.warn(r);
             }

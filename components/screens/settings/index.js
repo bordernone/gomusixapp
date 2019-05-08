@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, Switch } from 'react-native';
+import { View, Text, Platform, Switch, Alert } from 'react-native';
 import { Header, Icon, ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { material } from 'react-native-typography';
@@ -72,6 +72,8 @@ class SettingsScreen extends Component {
                 autoSyncStatus: true,
             });
         }
+
+        Alert.alert('Please restart the app')
     }
 
     render() {

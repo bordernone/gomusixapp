@@ -8,7 +8,6 @@ import TrackPlayer from 'react-native-track-player';
 import * as Progress from 'react-native-progress';
 import UserSongs from '../../global/database';
 import { playThisSongOffline, getApiCredentials, getMusicFiles, downloadThisSong } from '../../global/utils';
-import { logoutUser } from '../../global/auth';
 import styles from './style';
 import '../../global/config';
 import Myplaceholder from './customplaceholder';
@@ -175,6 +174,14 @@ class OnlineScreen extends Component {
             <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
                     centerComponent={{ text: 'Online', style: { color: '#061737' } }}
+                    leftComponent={
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.toggleDrawer(); }}
+                            style={{ padding: 8, }}><Icon
+                                name='bars'
+                                type='font-awesome'
+                                color={'#27a4de'} />
+                        </TouchableOpacity>}
                     rightComponent={
                         <TouchableOpacity
                             onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
@@ -186,14 +193,6 @@ class OnlineScreen extends Component {
                             />
                         </TouchableOpacity>
                     }
-                    leftComponent={
-                        <TouchableOpacity
-                            onPress={() => { logoutUser(this); }}
-                            style={{ padding: 8, }}><Icon
-                                name='sign-out'
-                                type='font-awesome'
-                                color={'#27a4de'} />
-                        </TouchableOpacity>}
                     backgroundColor={'white'}
                     containerStyle={{ borderBottomWidth: 2, borderBottomColor: '#27a4de', marginTop: Platform.OS === 'ios' ? 0 : - 26, }}
                 />

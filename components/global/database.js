@@ -156,7 +156,7 @@ class UserSongs {
                         console.log('Songs List Loaded');
                         console.log(musicsList);
                     } else {
-                        console.log('Cannot get songs list');
+                        console.log('Cannot get songs list. Maybe it is empty? ');
                         console.log(response);
                         console.log(tx);
                     }

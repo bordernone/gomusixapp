@@ -20,9 +20,17 @@ class OfflineScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView>
+            <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
                     placement={'center'}
+                    leftComponent={
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.toggleDrawer(); }}
+                            style={{ padding: 8, }}><Icon
+                                name='bars'
+                                type='font-awesome'
+                                color={'#27a4de'} />
+                        </TouchableOpacity>}
                     rightComponent={<TouchableOpacity
                         onPress={() => { this.props.navigation.navigate('MediaPlayer') }}
                         style={{ padding: 8, }}>
@@ -50,7 +58,7 @@ class OfflineScreen extends Component {
                         onPress={() => {this.props.navigation.navigate('Login')}}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 }
