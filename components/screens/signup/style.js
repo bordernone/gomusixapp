@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
     },
-    loginFormContainer:{
+    signupFormContainer:{
         minHeight:200,
         width:'100%',
-        paddingBottom:40,
+        paddingBottom:30,
     },
     headerContainer:{
         width:'100%',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    loginButton:{
+    signupButton:{
         marginTop:scale(5),
         padding:scale(10),
         paddingLeft:scale(30),
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         borderRadius:8,
         //width:'100%',
     },
-    loginTitle:{
+    signupTitle:{
         fontSize:scale(15),
         textAlign:'center',
     },

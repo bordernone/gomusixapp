@@ -11,19 +11,21 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import styles from './style';
 import '../../global/config';
 
-class LoginScreen extends Component {
+class SignupScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            usernameInput: '',
-            passwordInput: '',
+            usernameInput: null,
+            passwordInput: null,
+            confirmPasswordInput: null,
+            emailInput: null,
             isDeviceOnline: false,
         }
 
 
         this.navigateToDashboard = this.navigateToDashboard.bind(this);
-        this.signInNow = this.signInNow.bind(this);
-        this.handleLoginResponse = this.handleLoginResponse.bind(this);
+        this.signupNow = this.signupNow.bind(this);
+        this.handlesignupResponse = this.handlesignupResponse.bind(this);
         this.storeApiKeys = this.storeApiKeys.bind(this);
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
@@ -87,18 +89,22 @@ class LoginScreen extends Component {
         this.props.navigation.navigate('Dashboard');
     }
 
-    signInNow() {
-        console.warn(this.state.isDeviceOnline);
+    signupNow() {
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
-        if (username == null || password == null) {
-            Alert.alert('Incorrect username or password');
+        let cpassword = this.state.confirmPasswordInput;
+        let email = this.state.emailInput;
+        if (username == null || password == null || cpassword == null || email == null) {
+            Alert.alert('Please fill all fields');
+        } else if (password != cpassword) {
+            Alert.alert('Passwords did not match');
         } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
             var formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
+            formData.append('email', email);
             var data = {
                 method: 'POST',
                 headers: {
@@ -106,29 +112,40 @@ class LoginScreen extends Component {
                 },
                 body: formData,
             };
-            fetch(global.DOMAIN + 'api/token/', data)
-                .then((res) => res.json())
-                .then((res) => { this.handleLoginResponse(res) })
+            fetch(global.DOMAIN + 'api/signup/', data)
+                .then(response => {
+                    const statusCode = response.status;
+                    let data = '';
+                    if (statusCode == 200) {
+                        data = response.json();
+                    }
+                    return Promise.all([statusCode, data]);
+                })
+                .then(([statusCode, data]) => {
+                    if (statusCode == 200) {
+                        this.handlesignupResponse(data);
+                    } else {
+                        Alert.alert('Something went wrong');
+                    }
+                    console.log(data);
+                })
                 .catch((error) => {
-                    console.warn(error);
+                    Alert.alert('Something went wrong');
+                    console.log(error);
                 });
         }
     }
-    handleLoginResponse = async (responseObj) => {
-        console.warn('right');
-        if (responseObj.hasOwnProperty('apiToken') && responseObj.hasOwnProperty('apiRefreshToken')) {
-            let apiToken = responseObj.apiToken;
-            let apiRefreshToken = responseObj.apiRefreshToken;
-            let storeKeys = await this.storeApiKeys(apiToken, apiRefreshToken, this.state.usernameInput);
-            if (storeKeys === true) {
-                this.navigateToDashboard();
-            } else {
-                Alert.alert('Something went wrong.');
-            }
-        } else {
-            Alert.alert('Incorrect Username or Password');
+
+    handlesignupResponse = async (responseObj) => {
+        if (responseObj.hasOwnProperty('successMsg')) {
+            let responseMsg = responseObj.successMsg;
+            Alert.alert(responseMsg);
+        } else if (responseObj.hasOwnProperty('errorMsg')) {
+            let responseMsg = responseObj.errorMsg;
+            Alert.alert(responseMsg);
         }
     }
+    
     storeApiKeys = async (apiToken, apiRefreshToken, username) => {
         let successful = false;
         try {
@@ -171,13 +188,13 @@ class LoginScreen extends Component {
                         styles={styles.contentsWrapper}
                         showsVerticalScrollIndicator={false}>
                         <View style={styles.bodyContainer}>
-                            <View style={styles.loginFormContainer}>
+                            <View style={styles.signupFormContainer}>
                                 <View style={styles.headerContainer}>
                                     <View style={styles.signUpButtonWrapper}>
                                         <TouchableOpacity
                                             style={styles.signUpButton}
-                                            onPress={() => { this.props.navigation.navigate('Signup') }}>
-                                            <Text style={[styles.textBlue, styles.signUpButtonText]}>Sign Up</Text>
+                                            onPress={() => { this.props.navigation.navigate('Login') }}>
+                                            <Text style={[styles.textBlue, styles.signUpButtonText]}>Sign In</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <AutoHeightImage width={wp('50%')} source={require('../../global/images/gomusix.png')} style={styles.headerImg} />
@@ -204,12 +221,28 @@ class LoginScreen extends Component {
 
                                 <View style={styles.formInputContainer}>
                                     <Input
+                                        placeholder={'Your email here'}
+                                        placeholderTextColor={'white'}
+                                        inputContainerStyle={{ borderBottomWidth: 0 }}
+                                        inputStyle={styles.inputField}
+                                        ref={(input) => { this.emailInput = input; }}
+                                        returnKeyType={"next"}
+                                        onSubmitEditing={() => { this.emailInput.focus(); }}
+                                        blurOnSubmit={false}
+                                        onChangeText={emailInput => this.setState({ emailInput })}
+                                        autoCapitalize={'none'}
+                                        autoCorrect={false}
+                                    />
+                                </View>
+
+                                <View style={styles.formInputContainer}>
+                                    <Input
                                         placeholder={'Your password here'}
                                         placeholderTextColor={'white'}
                                         inputContainerStyle={{ borderBottomWidth: 0 }}
                                         inputStyle={styles.inputField}
                                         ref={(input) => { this.passwordInput = input; }}
-                                        returnKeyType={"done"}
+                                        returnKeyType={"next"}
                                         blurOnSubmit={false}
                                         onChangeText={passwordInput => this.setState({ passwordInput })}
                                         autoCapitalize={'none'}
@@ -218,25 +251,34 @@ class LoginScreen extends Component {
                                     />
                                 </View>
 
-                                <View style={styles.forgotPasswordContainer}>
-                                    <TouchableOpacity style={styles.forgotPasswordButton}>
-                                        <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
-                                    </TouchableOpacity>
+                                <View style={styles.formInputContainer}>
+                                    <Input
+                                        placeholder={'Confirm your password'}
+                                        placeholderTextColor={'white'}
+                                        inputContainerStyle={{ borderBottomWidth: 0 }}
+                                        inputStyle={styles.inputField}
+                                        ref={(input) => { this.confirmPasswordInput = input; }}
+                                        returnKeyType={"done"}
+                                        blurOnSubmit={false}
+                                        onChangeText={confirmPasswordInput => this.setState({ confirmPasswordInput })}
+                                        autoCapitalize={'none'}
+                                        autoCorrect={false}
+                                        secureTextEntry={true}
+                                    />
                                 </View>
-
                                 <View style={styles.formSubmitContainer}>
                                     <Button
-                                        onPress={() => this.signInNow()}
-                                        buttonStyle={styles.loginButton}
-                                        titleStyle={styles.loginTitle}
+                                        onPress={() => this.signupNow()}
+                                        buttonStyle={styles.signupButton}
+                                        titleStyle={styles.signupTitle}
                                         icon={
                                             <Icon
-                                                style={styles.loginTitle}
+                                                style={styles.signupTitle}
                                                 name="sign-in"
                                                 color="white"
                                             />
                                         }
-                                        title={" Sign In"}
+                                        title={" Create account"}
                                     />
                                 </View>
 
@@ -256,4 +298,4 @@ class LoginScreen extends Component {
     }
 }
 
-export default LoginScreen;
+export default SignupScreen;

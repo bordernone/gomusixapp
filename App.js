@@ -11,6 +11,7 @@ import ProcessScreen from './components/screens/process';
 import MediaPlayerScreen from './components/screens/mediaplyer';
 import SettingsScreen from './components/screens/settings';
 import LogoutScreen from './components/screens/logout';
+import SignupScreen from './components/screens/signup';
 
 
 const switchNavigatorForOnlineTab = createSwitchNavigator(
@@ -124,6 +125,7 @@ const mainStackNavigator = createSwitchNavigator(
     {
         Login: LoginScreen,
         Dashboard: dashboardStackWrapper,
+        Signup: SignupScreen,
     },
     {
         initialRouteName: 'Login',
