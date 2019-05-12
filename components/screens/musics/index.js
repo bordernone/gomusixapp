@@ -6,6 +6,7 @@ import RNFS from 'react-native-fs';
 import NetInfo from '@react-native-community/netinfo';
 import DefaultPreference from 'react-native-default-preference';
 import TrackPlayer from 'react-native-track-player';
+import ActionSheet from 'react-native-actionsheet';
 import UserSongs from '../../global/database';
 import styles from './style';
 import { playThisSongOffline, deleteThisSong, isMusicsListChanged, getMusicFilesFromServer, doesThisSongExist, getUsername, getApiToken, setMusicsListChangedFlagTrue, isSongPlaying, playingSongSn } from '../../global/utils';
@@ -23,6 +24,7 @@ class MusicsScreen extends Component {
             musicsListServer: [],
             syncStarted: false,
             syncSongsSn: [],
+            longPressedItem: null,
         }
 
         this.navigateToOnline = this.navigateToOnline.bind(this);
@@ -253,6 +255,32 @@ class MusicsScreen extends Component {
         this.props.navigation.navigate('MediaPlayer');
     }
 
+    handleLongPressSong = (item) => {
+        this.setState({
+            longPressedItem: item,
+        });
+        this.ActionSheet.show();
+    }
+
+    handleOptionSelection = (optionIndex) => {
+        if (optionIndex == 0) {
+            // handle song play
+            let item = this.state.longPressedItem;
+            playThisSongOffline(item.sn, item.title, item.artist, this);
+        } else if (optionIndex == 1) {
+            // handle song deletion
+            let item = this.state.longPressedItem;
+            let indexOfSong = this.indexFromSn(item.sn);
+            this.handleSongDelete(item, indexOfSong);
+            console.log('Delete Song ' + item.title + ' Index: ' + indexOfSong)
+        } else if (optionIndex == 2) {
+            // handle cancel
+            this.setState({
+                longPressedItem: null,
+            });
+        }
+    }
+
     handleSongDelete = (item, index) => {
         deleteThisSong(item.sn);
         let musicsList = this.state.musicsList;
@@ -289,12 +317,18 @@ class MusicsScreen extends Component {
         }
     }
 
-    //renderItem = 
 
     keyExtractor = (item, index) => index.toString()
 
     render() {
         const { searchInput } = this.state;
+
+        var optionArray = [
+            'Play now',
+            'Delete',
+            'Cancel',
+        ];
+
         return (
             <View style={{ backgroundColor: '#efefef', minHeight: '100%' }}>
                 <Header
@@ -337,6 +371,7 @@ class MusicsScreen extends Component {
                         data={this.state.musicsList}
                         renderItem={({ item, index }) => (
                             <ListItem
+                                onLongPress={() => { this.handleLongPressSong(item); }}
                                 title={item.title}
                                 titleProps={{ numberOfLines: 1 }}
                                 titleStyle={styles.songTitleStyle}
@@ -359,6 +394,23 @@ class MusicsScreen extends Component {
                         extraData={this.state.rowIndex}
                     />
                 </ScrollView>
+
+                <ActionSheet
+                    ref={o => (this.ActionSheet = o)}
+                    //Title of the Bottom Sheet
+                    title={'Options'}
+                    //Options Array to show in bottom sheet
+                    options={optionArray}
+                    //Define cancel button index in the option array
+                    //this will take the cancel option in bottom and will highlight it
+                    cancelButtonIndex={2}
+                    //If you want to highlight any specific option you can use below prop
+                    destructiveButtonIndex={1}
+                    onPress={index => {
+                        //Clicking on the option will give you the index of the option clicked
+                        this.handleOptionSelection(index);
+                    }}
+                />
             </View>
         );
     }

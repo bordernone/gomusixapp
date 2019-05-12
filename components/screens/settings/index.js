@@ -109,7 +109,7 @@ class SettingsScreen extends Component {
 
                         <ListItem
                             title='Auto Sync'
-                            subtitle={'Download songs automatically'}
+                            subtitle={'This will auto download deleted songs.'}
                             subtitleStyle={{ color: 'grey' }}
                             leftIcon={
                                 <Icon
