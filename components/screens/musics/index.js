@@ -38,11 +38,10 @@ class MusicsScreen extends Component {
         this.updateSearch = this.updateSearch.bind(this);
         this.updateMusicsList = this.updateMusicsList.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
+        this.updateCurrentPlayingSongSn = this.updateCurrentPlayingSongSn.bind(this);
 
         // creating database object
         this.userSongsObj = new UserSongs();
-
-        this.initiate();
     }
 
     _isMounted = false;
@@ -63,6 +62,7 @@ class MusicsScreen extends Component {
         this.onTrackChange = TrackPlayer.addEventListener('playback-state', async (data) => {
             const state = await TrackPlayer.getState();
             if (state == TrackPlayer.STATE_PLAYING && this._isMounted == true) {
+                this.updateCurrentPlayingSongSn();
                 _this.setState({
                     isSongPlaying: true,
                 });
@@ -72,7 +72,7 @@ class MusicsScreen extends Component {
                 });
             }
         });
-
+        this.initiate();
     }
 
     componentDidUpdate = async () => {
@@ -112,6 +112,10 @@ class MusicsScreen extends Component {
 
         this.checkInternetConnection(); // this method automatically loads songs from server
 
+        this.updateCurrentPlayingSongSn();
+    }
+
+    updateCurrentPlayingSongSn = async () => {
         // checking if song is being played
         if (await isSongPlaying()) {
             await this.setState({
@@ -119,7 +123,6 @@ class MusicsScreen extends Component {
                 songPlayingSn: await playingSongSn(),
             });
         }
-
     }
 
     checkInternetConnection = () => {

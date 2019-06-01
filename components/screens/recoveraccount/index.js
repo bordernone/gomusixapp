@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StatusBar, Alert, Dimensions, Platform } from 'react-native';
+import { Text, View, Image, StatusBar, Alert, Dimensions, Platform, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Input, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
@@ -11,20 +11,18 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import styles from './style';
 import '../../global/config';
 
-class LoginScreen extends Component {
+class RecoverAccountScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            usernameInput: '',
-            passwordInput: '',
+            emailInput: '',
             isDeviceOnline: false,
         }
 
 
         this.navigateToDashboard = this.navigateToDashboard.bind(this);
-        this.signInNow = this.signInNow.bind(this);
-        this.handleLoginResponse = this.handleLoginResponse.bind(this);
-        this.storeApiKeys = this.storeApiKeys.bind(this);
+        this.recoverAccountNow = this.recoverAccountNow.bind(this);
+        this.handleRecoverResponse = this.handleRecoverResponse.bind(this);
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
 
@@ -87,17 +85,15 @@ class LoginScreen extends Component {
         this.props.navigation.navigate('Dashboard');
     }
 
-    signInNow() {
-        let username = this.state.usernameInput;
-        let password = this.state.passwordInput;
-        if (username == null || password == null) {
-            Alert.alert('Incorrect username or password');
+    recoverAccountNow() {
+        let email = this.state.emailInput;
+        if (email == null || email == '') {
+            Alert.alert('Invalid email address');
         } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
             var formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
+            formData.append('recoveryemail', email);
             var data = {
                 method: 'POST',
                 headers: {
@@ -105,43 +101,24 @@ class LoginScreen extends Component {
                 },
                 body: formData,
             };
-            fetch(global.DOMAIN + 'api/token/', data)
+            fetch(global.DOMAIN + 'api/recover/', data)
                 .then((res) => res.json())
-                .then((res) => { this.handleLoginResponse(res) })
+                .then((res) => { this.handleRecoverResponse(res) })
                 .catch((error) => {
-                    Alert.alert('Connection error');
-                    console.log(error);
+                    console.warn(error);
                 });
         }
     }
-    handleLoginResponse = async (responseObj) => {
-        if (responseObj.hasOwnProperty('apiToken') && responseObj.hasOwnProperty('apiRefreshToken')) {
-            let apiToken = responseObj.apiToken;
-            let apiRefreshToken = responseObj.apiRefreshToken;
-            let storeKeys = await this.storeApiKeys(apiToken, apiRefreshToken, this.state.usernameInput);
-            if (storeKeys === true) {
-                this.navigateToDashboard();
-            } else {
-                Alert.alert('Something went wrong.');
-            }
-        } else {
-            Alert.alert('Incorrect Username or Password');
+    handleRecoverResponse = async (responseObj) => {
+        if (responseObj.hasOwnProperty('successMsg')) {
+            let responseMsg = responseObj.successMsg;
+            Alert.alert(responseMsg);
+        } else if (responseObj.hasOwnProperty('errorMsg')) {
+            let responseMsg = responseObj.errorMsg;
+            Alert.alert(responseMsg);
         }
     }
-    storeApiKeys = async (apiToken, apiRefreshToken, username) => {
-        let successful = false;
-        try {
-            await AsyncStorage.setItem('@GoMusix:apiToken', (apiToken));
-            await AsyncStorage.setItem('@GoMusix:apiRefreshToken', (apiRefreshToken));
-            await AsyncStorage.setItem('@GoMusix:username', (username));
-            this.setState({ isUserLoggedIn: true });
-            successful = true;
-        } catch (error) {
-            console.warn(error);
-            successful = false;
-        }
-        return successful;
-    }
+    
     isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
@@ -170,7 +147,7 @@ class LoginScreen extends Component {
                         styles={styles.contentsWrapper}
                         showsVerticalScrollIndicator={false}>
                         <View style={styles.bodyContainer}>
-                            <View style={styles.loginFormContainer}>
+                            <View style={styles.recoverFormContainer}>
                                 <View style={styles.headerContainer}>
                                     <View style={styles.signUpButtonWrapper}>
                                         <TouchableOpacity
@@ -187,58 +164,33 @@ class LoginScreen extends Component {
 
                                 <View style={styles.formInputContainer}>
                                     <Input
-                                        placeholder={'Your username here'}
+                                        placeholder={'Enter your email address'}
                                         placeholderTextColor={'white'}
                                         inputContainerStyle={{ borderBottomWidth: 0 }}
                                         inputStyle={styles.inputField}
-                                        ref={(input) => { this.usernameInput = input; }}
+                                        ref={(input) => { this.emailInput = input; }}
                                         returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.passwordInput.focus(); }}
+                                        onSubmitEditing={() => { Keyboard.dismiss }}
                                         blurOnSubmit={false}
-                                        onChangeText={usernameInput => this.setState({ usernameInput })}
+                                        onChangeText={emailInput => this.setState({ emailInput })}
                                         autoCapitalize={'none'}
                                         autoCorrect={false}
                                     />
-                                </View>
-
-                                <View style={styles.formInputContainer}>
-                                    <Input
-                                        placeholder={'Your password here'}
-                                        placeholderTextColor={'white'}
-                                        inputContainerStyle={{ borderBottomWidth: 0 }}
-                                        inputStyle={styles.inputField}
-                                        ref={(input) => { this.passwordInput = input; }}
-                                        returnKeyType={"done"}
-                                        blurOnSubmit={false}
-                                        onChangeText={passwordInput => this.setState({ passwordInput })}
-                                        autoCapitalize={'none'}
-                                        autoCorrect={false}
-                                        secureTextEntry={true}
-                                    />
-                                </View>
-
-                                <View style={styles.forgotPasswordContainer}>
-                                    <TouchableOpacity 
-                                        style={styles.forgotPasswordButton}
-                                        onPress={()=>{this.props.navigation.navigate('RecoverAccount')}}
-                                    >
-                                        <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
-                                    </TouchableOpacity>
                                 </View>
 
                                 <View style={styles.formSubmitContainer}>
                                     <Button
-                                        onPress={() => this.signInNow()}
-                                        buttonStyle={styles.loginButton}
-                                        titleStyle={styles.loginTitle}
+                                        onPress={() => this.recoverAccountNow()}
+                                        buttonStyle={styles.recoverButton}
+                                        titleStyle={styles.recoverTitle}
                                         icon={
                                             <Icon
-                                                style={styles.loginTitle}
+                                                style={styles.recoverTitle}
                                                 name="sign-in"
                                                 color="white"
                                             />
                                         }
-                                        title={" Sign In"}
+                                        title={" Recover account"}
                                     />
                                 </View>
 
@@ -258,4 +210,4 @@ class LoginScreen extends Component {
     }
 }
 
-export default LoginScreen;
+export default RecoverAccountScreen;

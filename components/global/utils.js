@@ -344,7 +344,6 @@ export async function playThisSongOffline(sn, title, artist, _this = null) {
 
         // base64 data for artwork
         let artworkBase64 = await RNFS.readFile(await getLocalThumbnailUrl(sn), 'base64').then();
-        console.log(artworkBase64);
 
         // Adds a track to the queue
         await TrackPlayer.add({

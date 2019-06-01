@@ -26,7 +26,6 @@ class SignupScreen extends Component {
         this.navigateToDashboard = this.navigateToDashboard.bind(this);
         this.signupNow = this.signupNow.bind(this);
         this.handlesignupResponse = this.handlesignupResponse.bind(this);
-        this.storeApiKeys = this.storeApiKeys.bind(this);
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
 
@@ -146,20 +145,6 @@ class SignupScreen extends Component {
         }
     }
     
-    storeApiKeys = async (apiToken, apiRefreshToken, username) => {
-        let successful = false;
-        try {
-            await AsyncStorage.setItem('@GoMusix:apiToken', (apiToken));
-            await AsyncStorage.setItem('@GoMusix:apiRefreshToken', (apiRefreshToken));
-            await AsyncStorage.setItem('@GoMusix:username', (username));
-            this.setState({ isUserLoggedIn: true });
-            successful = true;
-        } catch (error) {
-            console.warn(error);
-            successful = false;
-        }
-        return successful;
-    }
     isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
