@@ -88,9 +88,6 @@ class LoginScreen extends Component {
     }
 
     signInNow() {
-        this.setState({
-            isLoadingSignin: true,
-        });
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
         if (username == null || password == null) {
@@ -98,6 +95,9 @@ class LoginScreen extends Component {
         } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
+            this.setState({
+                isLoadingSignin: true,
+            });
             var formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);

@@ -17,6 +17,7 @@ class RecoverAccountScreen extends Component {
         this.state = {
             emailInput: '',
             isDeviceOnline: false,
+            isLoadingRecoverAccount: false,
         }
 
 
@@ -26,7 +27,6 @@ class RecoverAccountScreen extends Component {
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
 
-        this.initSession();
         this.checkInternetConnection();
     }
 
@@ -92,6 +92,9 @@ class RecoverAccountScreen extends Component {
         } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
+            this.setState({
+                isLoadingRecoverAccount: true,
+            });
             var formData = new FormData();
             formData.append('recoveryemail', email);
             var data = {
@@ -105,6 +108,9 @@ class RecoverAccountScreen extends Component {
                 .then((res) => res.json())
                 .then((res) => { this.handleRecoverResponse(res) })
                 .catch((error) => {
+                    this.setState({
+                        isLoadingRecoverAccount: false,
+                    });
                     console.warn(error);
                 });
         }
@@ -117,8 +123,12 @@ class RecoverAccountScreen extends Component {
             let responseMsg = responseObj.errorMsg;
             Alert.alert(responseMsg);
         }
+
+        this.setState({
+            isLoadingRecoverAccount: false,
+        });
     }
-    
+
     isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
@@ -135,6 +145,35 @@ class RecoverAccountScreen extends Component {
             loggedIn = false;
         }
         return loggedIn;
+    }
+
+    renderRecoverAccountBtn = () => {
+        if (this.state.isLoadingRecoverAccount == true) {
+            return (
+                <Button
+                    buttonStyle={styles.recoverButton}
+                    titleStyle={styles.recoverTitle}
+                    loading
+                    title={" Recover account"}
+                />
+            );
+        } else {
+            return (
+                <Button
+                    onPress={() => this.recoverAccountNow()}
+                    buttonStyle={styles.recoverButton}
+                    titleStyle={styles.recoverTitle}
+                    icon={
+                        <Icon
+                            style={styles.recoverTitle}
+                            name="sign-in"
+                            color="white"
+                        />
+                    }
+                    title={" Recover account"}
+                />
+            );
+        }
     }
 
     render() {
@@ -179,19 +218,7 @@ class RecoverAccountScreen extends Component {
                                 </View>
 
                                 <View style={styles.formSubmitContainer}>
-                                    <Button
-                                        onPress={() => this.recoverAccountNow()}
-                                        buttonStyle={styles.recoverButton}
-                                        titleStyle={styles.recoverTitle}
-                                        icon={
-                                            <Icon
-                                                style={styles.recoverTitle}
-                                                name="sign-in"
-                                                color="white"
-                                            />
-                                        }
-                                        title={" Recover account"}
-                                    />
+                                    { this.renderRecoverAccountBtn() }
                                 </View>
 
                                 <View style={styles.skipButtonWrapper}>

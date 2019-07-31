@@ -90,9 +90,6 @@ class SignupScreen extends Component {
     }
 
     signupNow() {
-        this.setState({
-            isLoadingSignUp: true,
-        });
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
         let cpassword = this.state.confirmPasswordInput;
@@ -104,6 +101,9 @@ class SignupScreen extends Component {
         } else if (this.state.isDeviceOnline == false) {
             Alert.alert('No internet connection');
         } else {
+            this.setState({
+                isLoadingSignUp: true,
+            });
             var formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
@@ -175,7 +175,7 @@ class SignupScreen extends Component {
     }
 
     renderSignUpBtn = () => {
-        if (this.state.isLoadingSignUp == true) {
+        if (this.state.isLoadingSignUp == false) {
             return (
                 <Button
                     onPress={() => this.signupNow()}
