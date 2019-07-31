@@ -18,6 +18,7 @@ class LoginScreen extends Component {
             usernameInput: '',
             passwordInput: '',
             isDeviceOnline: false,
+            isLoadingSignin: false,
         }
 
 
@@ -28,7 +29,6 @@ class LoginScreen extends Component {
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
 
-        this.initSession();
         this.checkInternetConnection();
     }
 
@@ -88,6 +88,9 @@ class LoginScreen extends Component {
     }
 
     signInNow() {
+        this.setState({
+            isLoadingSignin: true,
+        });
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
         if (username == null || password == null) {
@@ -107,9 +110,14 @@ class LoginScreen extends Component {
             };
             fetch(global.DOMAIN + 'api/token/', data)
                 .then((res) => res.json())
-                .then((res) => { this.handleLoginResponse(res) })
+                .then((res) => {
+                    this.handleLoginResponse(res);
+                })
                 .catch((error) => {
                     Alert.alert('Connection error');
+                    this.setState({
+                        isLoadingSignin: false,
+                    });
                     console.log(error);
                 });
         }
@@ -127,6 +135,10 @@ class LoginScreen extends Component {
         } else {
             Alert.alert('Incorrect Username or Password');
         }
+
+        this.setState({
+            isLoadingSignin: false,
+        });
     }
     storeApiKeys = async (apiToken, apiRefreshToken, username) => {
         let successful = false;
@@ -142,6 +154,7 @@ class LoginScreen extends Component {
         }
         return successful;
     }
+
     isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
@@ -158,6 +171,35 @@ class LoginScreen extends Component {
             loggedIn = false;
         }
         return loggedIn;
+    }
+
+    renderSignInBtn = () => {
+        if (this.state.isLoadingSignin == true) {
+            return (
+                <Button
+                    loading
+                    title={" Sign In"}
+                    buttonStyle={styles.loginButton}
+                    titleStyle={styles.loginTitle}
+                />
+            );
+        } else {
+            return (
+                <Button
+                    onPress={() => this.signInNow()}
+                    buttonStyle={styles.loginButton}
+                    titleStyle={styles.loginTitle}
+                    icon={
+                        <Icon
+                            style={styles.loginTitle}
+                            name="sign-in"
+                            color="white"
+                        />
+                    }
+                    title={" Sign In"}
+                />
+            )
+        }
     }
 
     render() {
@@ -218,28 +260,16 @@ class LoginScreen extends Component {
                                 </View>
 
                                 <View style={styles.forgotPasswordContainer}>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                         style={styles.forgotPasswordButton}
-                                        onPress={()=>{this.props.navigation.navigate('RecoverAccount')}}
+                                        onPress={() => { this.props.navigation.navigate('RecoverAccount') }}
                                     >
                                         <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
                                     </TouchableOpacity>
                                 </View>
 
                                 <View style={styles.formSubmitContainer}>
-                                    <Button
-                                        onPress={() => this.signInNow()}
-                                        buttonStyle={styles.loginButton}
-                                        titleStyle={styles.loginTitle}
-                                        icon={
-                                            <Icon
-                                                style={styles.loginTitle}
-                                                name="sign-in"
-                                                color="white"
-                                            />
-                                        }
-                                        title={" Sign In"}
-                                    />
+                                    { this.renderSignInBtn() }
                                 </View>
 
                                 <View style={styles.skipButtonWrapper}>

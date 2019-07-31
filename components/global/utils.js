@@ -462,3 +462,21 @@ export async function getLocalThumbnailUrl(sn) {
         return imgBase64;
     }
 }
+
+export async function isUserLoggedIn() {
+    let loggedIn = false;
+    try {
+        let apiToken = await AsyncStorage.getItem('@GoMusix:apiToken');
+        let apiRefreshToken = await AsyncStorage.getItem('@GoMusix:apiRefreshToken');
+        let username = await AsyncStorage.getItem('@GoMusix:username');
+        if (apiToken == null || apiRefreshToken == null || username == null) {
+            loggedIn = false;
+        } else {
+            loggedIn = true;
+        }
+    } catch (error) {
+        console.warn(error);
+        loggedIn = false;
+    }
+    return loggedIn;
+}

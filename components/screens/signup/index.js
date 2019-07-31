@@ -20,6 +20,7 @@ class SignupScreen extends Component {
             confirmPasswordInput: null,
             emailInput: null,
             isDeviceOnline: false,
+            isLoadingSignUp: false,
         }
 
 
@@ -28,8 +29,8 @@ class SignupScreen extends Component {
         this.handlesignupResponse = this.handlesignupResponse.bind(this);
         this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
         this.checkInternetConnection = this.checkInternetConnection.bind(this);
+        this.renderSignUpBtn = this.renderSignUpBtn.bind(this);
 
-        this.initSession();
         this.checkInternetConnection();
     }
 
@@ -89,6 +90,9 @@ class SignupScreen extends Component {
     }
 
     signupNow() {
+        this.setState({
+            isLoadingSignUp: true,
+        });
         let username = this.state.usernameInput;
         let password = this.state.passwordInput;
         let cpassword = this.state.confirmPasswordInput;
@@ -131,6 +135,9 @@ class SignupScreen extends Component {
                 .catch((error) => {
                     Alert.alert('Something went wrong');
                     console.log(error);
+                    this.setState({
+                        isLoadingSignUp: false,
+                    });
                 });
         }
     }
@@ -143,8 +150,12 @@ class SignupScreen extends Component {
             let responseMsg = responseObj.errorMsg;
             Alert.alert(responseMsg);
         }
+
+        this.setState({
+            isLoadingSignUp: false,
+        });
     }
-    
+
     isUserLoggedIn = async () => {
         let loggedIn = false;
         try {
@@ -161,6 +172,35 @@ class SignupScreen extends Component {
             loggedIn = false;
         }
         return loggedIn;
+    }
+
+    renderSignUpBtn = () => {
+        if (this.state.isLoadingSignUp == true) {
+            return (
+                <Button
+                    onPress={() => this.signupNow()}
+                    buttonStyle={styles.signupButton}
+                    titleStyle={styles.signupTitle}
+                    icon={
+                        <Icon
+                            style={styles.signupTitle}
+                            name="sign-in"
+                            color="white"
+                        />
+                    }
+                    title={" Create account"}
+                />
+            )
+        } else {
+            return (
+                <Button
+                    buttonStyle={styles.signupButton}
+                    titleStyle={styles.signupTitle}
+                    loading
+                    title={"Create account"}
+                />
+            )
+        }
     }
 
     render() {
@@ -252,19 +292,7 @@ class SignupScreen extends Component {
                                     />
                                 </View>
                                 <View style={styles.formSubmitContainer}>
-                                    <Button
-                                        onPress={() => this.signupNow()}
-                                        buttonStyle={styles.signupButton}
-                                        titleStyle={styles.signupTitle}
-                                        icon={
-                                            <Icon
-                                                style={styles.signupTitle}
-                                                name="sign-in"
-                                                color="white"
-                                            />
-                                        }
-                                        title={" Create account"}
-                                    />
+                                    { this.renderSignUpBtn() }
                                 </View>
 
                                 <View style={styles.skipButtonWrapper}>

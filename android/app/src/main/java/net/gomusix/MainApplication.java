@@ -1,4 +1,4 @@
-package com.gomusix;
+package net.gomusix;
 
 import android.app.Application;
 

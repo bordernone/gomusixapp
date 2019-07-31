@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, Switch, Alert } from 'react-native';
+import { View, Text, Platform, Switch, Alert, Linking } from 'react-native';
 import { Header, Icon, ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { material } from 'react-native-typography';
 import DefaultPreference from 'react-native-default-preference';
+import { isUserLoggedIn } from '../../global/utils';
 import styles from './style';
 
 class SettingsScreen extends Component {
@@ -73,7 +74,17 @@ class SettingsScreen extends Component {
             });
         }
 
-        Alert.alert('Please restart the app')
+        Alert.alert('Please restart the app');
+    }
+
+    onPasswordChangePress = async () => {
+        if (await isUserLoggedIn() == true){
+            let url = "https://www.gomusix.net/settings/";
+            Linking.openURL(url)
+                .catch((err) => console.error('An error occurred', err));
+        } else {
+            Alert.alert('You are not logged in.')
+        }
     }
 
     render() {
@@ -145,6 +156,9 @@ class SettingsScreen extends Component {
                                     color={'#27a4de'}
                                 />
                             }
+                            onPress={() => {
+                                this.onPasswordChangePress();
+                            }}
                         />
                     </View>
                 </View>

@@ -1,4 +1,4 @@
-package com.gomusix;
+package net.gomusix;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
